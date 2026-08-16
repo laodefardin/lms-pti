@@ -1,0 +1,1 @@
+<div class="fade-in"><div class="card" style="text-align:center; padding:3rem;"><div style="font-size:3rem; margin-bottom:1rem;">🚧</div><div style="color:#8b95a8;">Halaman AdminIndex — Sedang dalam pengembangan</div></div></div>
