@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use App\Models\ForumThread as ThreadModel;
 use App\Models\ForumReply;
+use App\Services\{GamifikasiService, NotifikasiService};
 use Illuminate\Support\Facades\Auth;
 
 class ForumThread extends Component
@@ -30,14 +31,34 @@ class ForumThread extends Component
             'replyKonten' => 'required|string',
         ]);
 
-        ForumReply::create([
+        $reply = ForumReply::create([
             'forum_thread_id' => $this->thread->id,
             'user_id' => Auth::id(),
             'konten' => $this->replyKonten,
         ]);
 
         $this->reset('replyKonten');
-        // Award gamification points logic can be added here
+        
+        $gamifikasi = app(GamifikasiService::class);
+        $gamifikasi->berikanPoin(
+            userId: Auth::id(),
+            tipeAktivitas: \App\Models\GamifikasiPoin::FORUM_POST,
+            kelasId: $this->thread->kelas_id,
+            keterangan: "Membalas thread forum: {$this->thread->judul}",
+            referenceId: $reply->id,
+            allowDuplicate: true
+        );
+
+        if ($this->thread->user_id !== Auth::id()) {
+            app(NotifikasiService::class)->kirim(
+                userId: $this->thread->user_id,
+                tipe: 'forum',
+                judul: '💬 Balasan Baru di Thread Anda',
+                pesan: Auth::user()->name . " membalas thread \"{$this->thread->judul}\".",
+                icon: '💬',
+                link: "/mahasiswa/forum/thread/{$this->thread->id}"
+            );
+        }
         
         session()->flash('success', 'Balasan berhasil dikirim!');
     }
@@ -49,6 +70,27 @@ class ForumThread extends Component
             $reply = ForumReply::find($replyId);
             if ($reply) {
                 $reply->update(['is_solution' => true]);
+
+                $gamifikasi = app(GamifikasiService::class);
+                $gamifikasi->berikanPoin(
+                    userId: $reply->user_id,
+                    tipeAktivitas: \App\Models\GamifikasiPoin::FORUM_SOLUSI,
+                    kelasId: $this->thread->kelas_id,
+                    keterangan: "Balasan Anda ditandai sebagai solusi pada thread: {$this->thread->judul}",
+                    referenceId: $reply->id,
+                    allowDuplicate: false
+                );
+
+                if ($reply->user_id !== Auth::id()) {
+                    app(NotifikasiService::class)->kirim(
+                        userId: $reply->user_id,
+                        tipe: 'forum_solusi',
+                        judul: '✅ Solusi Terbaik!',
+                        pesan: "Balasan Anda ditandai sebagai solusi di thread \"{$this->thread->judul}\".",
+                        icon: '✅',
+                        link: "/mahasiswa/forum/thread/{$this->thread->id}"
+                    );
+                }
             }
         }
     }

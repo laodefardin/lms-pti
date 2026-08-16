@@ -8,6 +8,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
+use App\Services\GamifikasiService;
 
 #[Layout('components.layouts.mahasiswa', ['title' => 'Detail Tugas'])]
 class TugasDetail extends Component
@@ -73,6 +74,18 @@ class TugasDetail extends Component
                 'status' => 'dikumpulkan',
                 'waktu_pengumpulan' => now(),
             ]
+        );
+
+        $gamifikasi = app(GamifikasiService::class);
+        $isOntime = now()->lessThanOrEqualTo($this->tugas->deadline);
+        
+        $gamifikasi->berikanPoin(
+            userId: Auth::id(),
+            tipeAktivitas: \App\Models\GamifikasiPoin::TUGAS_DIKUMPULKAN,
+            kelasId: $this->tugas->kelas_id,
+            keterangan: "Pengumpulan tugas: {$this->tugas->judul} (" . ($isOntime ? 'Tepat Waktu' : 'Terlambat') . ")",
+            referenceId: $this->tugas->id,
+            allowDuplicate: false
         );
 
         $this->showSuccess = true;

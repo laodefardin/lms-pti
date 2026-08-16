@@ -36,12 +36,22 @@ class ForumKelas extends Component
             'kontenThread' => 'required|string',
         ]);
 
-        ForumThread::create([
+        $thread = ForumThread::create([
             'kelas_id' => $this->kelas->id,
             'user_id' => Auth::id(),
             'judul' => $this->judulThread,
             'konten' => $this->kontenThread,
         ]);
+
+        $gamifikasi = app(\App\Services\GamifikasiService::class);
+        $gamifikasi->berikanPoin(
+            userId: Auth::id(),
+            tipeAktivitas: \App\Models\GamifikasiPoin::FORUM_POST,
+            kelasId: $this->kelas->id,
+            keterangan: "Membuat thread forum: {$this->judulThread}",
+            referenceId: $thread->id,
+            allowDuplicate: true
+        );
 
         $this->reset(['showForm', 'judulThread', 'kontenThread']);
         session()->flash('success', 'Thread berhasil dibuat!');

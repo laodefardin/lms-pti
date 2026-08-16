@@ -5,6 +5,7 @@ namespace App\Livewire\Mahasiswa;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use App\Models\{Kuis, KuisSesi, KuisSoal, KuisJawaban};
+use App\Services\{GamifikasiService, NilaiService};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 
@@ -97,8 +98,33 @@ class KuisEngine extends Component
         $this->sesi->update([
             'status'     => 'selesai',
             'selesai_at' => now(),
-            'nilai_akhir'=> $nilaiAkhir,
+            'nilai'      => $nilaiAkhir,
         ]);
+
+        $gamifikasi = app(GamifikasiService::class);
+        $gamifikasi->berikanPoin(
+            userId: Auth::id(),
+            tipeAktivitas: \App\Models\GamifikasiPoin::KUIS_SELESAI,
+            kelasId: $this->kuis->kelas_id,
+            keterangan: "Menyelesaikan kuis: {$this->kuis->judul}",
+            referenceId: $this->kuis->id,
+            allowDuplicate: false
+        );
+        
+        if ($nilaiAkhir >= 70) {
+            $gamifikasi->berikanPoin(
+                userId: Auth::id(),
+                tipeAktivitas: \App\Models\GamifikasiPoin::KUIS_LULUS,
+                kelasId: $this->kuis->kelas_id,
+                keterangan: "Lulus kuis: {$this->kuis->judul} dengan nilai {$nilaiAkhir}",
+                referenceId: $this->kuis->id,
+                allowDuplicate: false
+            );
+        }
+
+        dispatch(function() {
+            app(NilaiService::class)->hitungNilaiAkhir(Auth::id(), $this->kuis->kelas_id);
+        })->afterResponse();
 
         $this->selesai      = true;
         $this->confirmSubmit = false;

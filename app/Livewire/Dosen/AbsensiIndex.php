@@ -68,8 +68,42 @@ class AbsensiIndex extends Component
 
     public function saveAbsensi()
     {
-        // Add save logic here based on your database structure.
-        session()->flash('success', 'Data absensi berhasil disimpan.');
+        if (!$this->selectedPertemuanId) return;
+
+        $absensi = \App\Models\Absensi::firstOrCreate(
+            ['pertemuan_id' => $this->selectedPertemuanId],
+            ['kelas_id' => $this->kelas->id, 'tanggal' => now()->toDateString()]
+        );
+
+        $gamifikasi = app(\App\Services\GamifikasiService::class);
+        $nilaiService = app(\App\Services\NilaiService::class);
+
+        foreach ($this->absensiData as $mhsId => $data) {
+            if (!empty($data['status'])) {
+                AbsensiMahasiswa::updateOrCreate(
+                    ['absensi_id' => $absensi->id, 'mahasiswa_id' => $mhsId],
+                    ['status' => $data['status'], 'keterangan' => $data['keterangan'] ?? null]
+                );
+
+                if ($data['status'] === 'hadir') {
+                    $gamifikasi->berikanPoin(
+                        userId: $mhsId,
+                        tipeAktivitas: \App\Models\GamifikasiPoin::ABSENSI_HADIR,
+                        kelasId: $this->kelas->id,
+                        keterangan: "Hadir pada pertemuan: {$this->kelas->pertemuan->firstWhere('id', $this->selectedPertemuanId)?->judul}",
+                        referenceId: $absensi->id,
+                        allowDuplicate: false
+                    );
+                }
+
+                // Update nilai akhir karena komponen kehadiran berubah
+                dispatch(function() use ($nilaiService, $mhsId) {
+                    $nilaiService->hitungNilaiAkhir($mhsId, $this->kelas->id);
+                })->afterResponse();
+            }
+        }
+
+        session()->flash('success', 'Data absensi berhasil disimpan dan poin kehadiran diperbarui.');
     }
 
     #[Layout('components.layouts.dosen', ['title' => 'Manajemen Absensi'])]
