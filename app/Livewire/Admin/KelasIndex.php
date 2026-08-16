@@ -3,134 +3,116 @@
 namespace App\Livewire\Admin;
 
 use Livewire\Component;
-use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use App\Models\Kelas;
+use App\Models\Semester;
 use App\Models\MataKuliah;
 use App\Models\User;
-use App\Models\Semester;
 
 #[Layout('components.layouts.admin', ['title' => 'Manajemen Kelas'])]
 class KelasIndex extends Component
 {
-    use WithPagination;
-
-    public $search = '';
-    public $semesterId = '';
+    public $semester_id;
     public $showModal = false;
-    public $editId = null;
+    
+    public $mata_kuliah_id;
+    public $dosen_id;
+    public $nama_kelas;
+    public $editId;
 
-    public $mataKuliahId = '';
-    public $dosenId = '';
-    public $semesterId_form = '';
-    public $namaKelas = 'A';
-    public $hariKuliah = '';
-    public $jamMulai = '';
-    public $jamSelesai = '';
-    public $ruangan = '';
-    public $batasKehadiran = 75;
-
-    public function updatingSearch()
+    public function mount()
     {
-        $this->resetPage();
-    }
-
-    public function updatingSemesterId()
-    {
-        $this->resetPage();
-    }
-
-    public function openCreate()
-    {
-        $this->reset(['editId', 'mataKuliahId', 'dosenId', 'semesterId_form', 'namaKelas', 'hariKuliah', 'jamMulai', 'jamSelesai', 'ruangan']);
-        $this->batasKehadiran = 75;
-        
-        // Auto-select active semester if available
-        $activeSemester = Semester::where('is_aktif', true)->first();
+        $activeSemester = Semester::where('is_active', true)->first();
         if ($activeSemester) {
-            $this->semesterId_form = $activeSemester->id;
+            $this->semester_id = $activeSemester->id;
+        } else {
+            $latestSemester = Semester::latest()->first();
+            if ($latestSemester) {
+                $this->semester_id = $latestSemester->id;
+            }
         }
-
-        $this->showModal = true;
     }
 
-    public function openEdit($id)
+    public function resetForm()
     {
-        $kelas = Kelas::findOrFail($id);
-        $this->editId = $id;
-        $this->mataKuliahId = $kelas->mata_kuliah_id;
-        $this->dosenId = $kelas->dosen_id;
-        $this->semesterId_form = $kelas->semester_id;
-        $this->namaKelas = $kelas->nama_kelas;
-        $this->hariKuliah = $kelas->hari_kuliah;
-        $this->jamMulai = $kelas->jam_mulai;
-        $this->jamSelesai = $kelas->jam_selesai;
-        $this->ruangan = $kelas->ruangan;
-        $this->batasKehadiran = $kelas->batas_kehadiran;
+        $this->mata_kuliah_id = '';
+        $this->dosen_id = '';
+        $this->nama_kelas = '';
+        $this->editId = null;
+        $this->resetValidation();
+    }
+
+    public function create()
+    {
+        $this->resetForm();
         $this->showModal = true;
     }
 
-    public function save()
+    public function edit($id)
+    {
+        $this->resetForm();
+        $kelas = Kelas::findOrFail($id);
+        $this->editId = $kelas->id;
+        $this->mata_kuliah_id = $kelas->mata_kuliah_id;
+        $this->dosen_id = $kelas->dosen_id;
+        $this->nama_kelas = $kelas->nama_kelas;
+        $this->showModal = true;
+    }
+
+    public function saveKelas()
     {
         $this->validate([
-            'mataKuliahId' => 'required|exists:mata_kuliah,id',
-            'dosenId' => 'required|exists:users,id',
-            'semesterId_form' => 'required|exists:semesters,id',
-            'namaKelas' => 'required|string|max:5',
-            'hariKuliah' => 'nullable|in:senin,selasa,rabu,kamis,jumat,sabtu',
-            'jamMulai' => 'nullable',
-            'jamSelesai' => 'nullable',
-            'ruangan' => 'nullable|string|max:50',
-            'batasKehadiran' => 'required|integer|min:0|max:100',
+            'mata_kuliah_id' => 'required|exists:mata_kuliah,id',
+            'dosen_id' => 'required|exists:users,id',
+            'nama_kelas' => 'required|string|max:255',
         ]);
 
-        Kelas::updateOrCreate(['id' => $this->editId], [
-            'mata_kuliah_id' => $this->mataKuliahId,
-            'dosen_id' => $this->dosenId,
-            'semester_id' => $this->semesterId_form,
-            'nama_kelas' => $this->namaKelas,
-            'hari_kuliah' => $this->hariKuliah,
-            'jam_mulai' => $this->jamMulai,
-            'jam_selesai' => $this->jamSelesai,
-            'ruangan' => $this->ruangan,
-            'batas_kehadiran' => $this->batasKehadiran,
-            'status' => 'aktif',
-        ]);
+        if (!$this->semester_id) {
+            session()->flash('error', 'Semester tidak valid.');
+            return;
+        }
+
+        Kelas::updateOrCreate(
+            ['id' => $this->editId],
+            [
+                'semester_id' => $this->semester_id,
+                'mata_kuliah_id' => $this->mata_kuliah_id,
+                'dosen_id' => $this->dosen_id,
+                'nama_kelas' => $this->nama_kelas,
+            ]
+        );
 
         $this->showModal = false;
-        $this->reset(['editId', 'mataKuliahId', 'dosenId', 'semesterId_form', 'namaKelas', 'hariKuliah', 'jamMulai', 'jamSelesai', 'ruangan']);
+        $this->resetForm();
+        session()->flash('message', 'Kelas berhasil disimpan.');
     }
 
-    public function delete($id)
+    public function deleteKelas($id)
     {
-        $kelas = Kelas::findOrFail($id);
-        $kelas->status = 'arsip';
-        $kelas->save();
+        Kelas::findOrFail($id)->delete();
+        session()->flash('message', 'Kelas berhasil dihapus.');
     }
 
     public function render()
     {
-        $query = Kelas::with(['mataKuliah', 'dosen', 'semester'])->withCount('mahasiswa');
-
-        if ($this->search) {
-            $query->where(function ($q) {
-                $q->whereHas('mataKuliah', function ($q2) {
-                    $q2->where('nama', 'like', '%' . $this->search . '%')
-                       ->orWhere('kode', 'like', '%' . $this->search . '%');
-                })->orWhere('nama_kelas', 'like', '%' . $this->search . '%');
-            });
-        }
-
-        if ($this->semesterId) {
-            $query->where('semester_id', $this->semesterId);
-        }
-
-        $kelasList = $query->latest()->paginate(15);
+        $semesters = Semester::orderBy('id', 'desc')->get();
         
-        $mataKuliahList = MataKuliah::where('is_active', true)->get();
-        $dosenList = User::dosen()->where('is_active', true)->get();
-        $semesterList = Semester::orderBy('tanggal_mulai', 'desc')->get();
+        $kelases = collect();
+        if ($this->semester_id) {
+            $kelases = Kelas::with(['mataKuliah', 'dosen'])
+                ->withCount('mahasiswa')
+                ->where('semester_id', $this->semester_id)
+                ->get();
+        }
 
-        return view('livewire.admin.kelas-index', compact('kelasList', 'mataKuliahList', 'dosenList', 'semesterList'));
+        $mataKuliahs = MataKuliah::all();
+        $dosens = User::where('role', 'dosen')->get();
+
+        return view('livewire.admin.kelas-index', [
+            'semesters' => $semesters,
+            'kelases' => $kelases,
+            'mataKuliahs' => $mataKuliahs,
+            'dosens' => $dosens,
+        ]);
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pertemuan extends Model
 {
+    protected $table = 'pertemuan';
     protected $fillable = ['kelas_id', 'nomor', 'topik', 'tanggal', 'deskripsi', 'status'];
     protected $casts    = ['tanggal' => 'date'];
 

@@ -74,6 +74,7 @@
         <header class="topbar">
             <span class="topbar-title">{{ $title ?? 'Dashboard' }}</span>
             <div class="topbar-actions">
+                <livewire:notification-center />
                 @include('components.theme-toggle')
                 <div style="display:flex; align-items:center; gap:0.4rem; background:var(--teal-dim); border:1px solid var(--border-teal); border-radius:99px; padding:0.28rem 0.7rem;">
                     <span style="font-size:0.85rem;">👨‍🏫</span>

@@ -16,21 +16,22 @@ class Leaderboard extends Component
     {
         $user = Auth::user();
 
-        $query = User::where('role', 'mahasiswa');
+        $query = User::role('mahasiswa');
         
         if ($this->filter === 'kelas_saya') {
-            $kelasIds = $user->kelas()->pluck('kelas.id');
-            $query->whereHas('kelas', function($q) use ($kelasIds) {
-                $q->whereIn('kelas.id', $kelasIds);
+            $kelasIds = $user->mahasiswaKelas()->pluck('kelas_id');
+            $query->whereHas('mahasiswaKelas', function($q) use ($kelasIds) {
+                $q->whereIn('kelas_id', $kelasIds);
             });
         }
 
-        $mahasiswaList = $query->withSum('gamifikasiPoin', 'jumlah_poin')
-            ->orderByDesc('gamifikasi_poin_sum_jumlah_poin')
+        $mahasiswaList = $query->withSum('gamifikasiPoin', 'poin')
+            ->orderByDesc('gamifikasi_poin_sum_poin')
             ->get();
 
         $mahasiswaList->each(function($mhs, $index) {
             $mhs->rank = $index + 1;
+            $mhs->total_poin = $mhs->gamifikasi_poin_sum_poin ?? 0;
         });
 
         $myRank = $mahasiswaList->firstWhere('id', $user->id);

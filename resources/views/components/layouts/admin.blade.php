@@ -81,6 +81,7 @@
         <header class="topbar">
             <span class="topbar-title">{{ $title ?? 'Admin Panel' }}</span>
             <div class="topbar-actions">
+                <livewire:notification-center />
                 @include('components.theme-toggle')
                 <div style="display:flex; align-items:center; gap:0.4rem; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.25); border-radius:99px; padding:0.28rem 0.7rem;">
                     <span style="font-size:0.85rem;">⚙️</span>

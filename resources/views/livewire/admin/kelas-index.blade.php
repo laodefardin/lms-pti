@@ -1,196 +1,135 @@
 <div class="fade-in">
-    <div class="flex justify-between items-center mb-6">
-        <div>
-            <h1 class="section-title">Manajemen Kelas 🏛️</h1>
-            <p class="section-sub">Kelola kelas, jadwal, dan dosen pengampu.</p>
-        </div>
-        <button wire:click="openCreate" class="btn btn-primary">
-            + Tambah Kelas
-        </button>
+    <div class="topbar flex justify-between items-center mb-6">
+        <h1 class="section-title">Manajemen Kelas</h1>
     </div>
 
+    @if (session()->has('message'))
+        <div class="badge badge-green mb-4 p-3 rounded">
+            {{ session('message') }}
+        </div>
+    @endif
+    @if (session()->has('error'))
+        <div class="badge badge-red mb-4 p-3 rounded">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <div class="card mb-6">
-        <div class="flex flex-col md:flex-row gap-4 mb-4">
-            <div class="flex-1">
-                <input wire:model.live.debounce.300ms="search" type="text" class="form-input w-full" placeholder="Cari nama kelas atau mata kuliah...">
-            </div>
-            <div class="w-full md:w-64">
-                <select wire:model.live="semesterId" class="form-input w-full">
-                    <option value="">Semua Semester</option>
-                    @foreach($semesterList as $smt)
-                        <option value="{{ $smt->id }}">{{ $smt->nama }}</option>
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+            <div class="flex items-center space-x-2">
+                <label class="font-medium text-gray-700" style="color: var(--text-primary)">Pilih Semester:</label>
+                <select wire:model.live="semester_id" class="form-input w-48 text-sm">
+                    <option value="">-- Pilih Semester --</option>
+                    @foreach($semesters as $sem)
+                        <option value="{{ $sem->id }}">{{ $sem->nama_semester }} {{ $sem->is_active ? '(Aktif)' : '' }}</option>
                     @endforeach
                 </select>
             </div>
+            
+            <button wire:click="create" class="btn btn-primary text-sm flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Tambah Kelas
+            </button>
         </div>
 
         <div class="table-wrap">
             <table class="lms-table w-full">
                 <thead>
                     <tr>
-                        <th class="text-left">No</th>
-                        <th class="text-left">Kelas</th>
                         <th class="text-left">Mata Kuliah</th>
-                        <th class="text-left">Dosen</th>
-                        <th class="text-center">Mahasiswa</th>
-                        <th class="text-left">Hari/Jam</th>
-                        <th class="text-center">Status</th>
+                        <th class="text-left">Dosen Pengampu</th>
+                        <th class="text-left">Nama Kelas</th>
+                        <th class="text-center">SKS</th>
+                        <th class="text-center">Jml Mahasiswa</th>
                         <th class="text-right">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($kelasList as $index => $kelas)
-                        <tr>
-                            <td>{{ $kelasList->firstItem() + $index }}</td>
-                            <td class="font-semibold">{{ $kelas->nama_kelas }}</td>
-                            <td>
-                                <div>{{ $kelas->mataKuliah->nama ?? '-' }}</div>
-                                <div class="text-xs text-gray-500">{{ $kelas->mataKuliah->kode ?? '-' }}</div>
+                    @forelse($kelases as $kelas)
+                        <tr class="border-b" style="border-color: var(--border);">
+                            <td class="py-3 font-medium">{{ $kelas->mataKuliah->nama_mata_kuliah ?? '-' }}</td>
+                            <td class="py-3">{{ $kelas->dosen->name ?? '-' }}</td>
+                            <td class="py-3">
+                                <span class="badge badge-teal">{{ $kelas->nama_kelas }}</span>
                             </td>
-                            <td>{{ $kelas->dosen->name ?? '-' }}</td>
-                            <td class="text-center">
-                                <span class="badge badge-purple">{{ $kelas->mahasiswa_count }}</span>
+                            <td class="py-3 text-center">{{ $kelas->mataKuliah->sks ?? '-' }}</td>
+                            <td class="py-3 text-center">
+                                <span class="text-gray-600 bg-gray-100 px-2 py-1 rounded text-xs">{{ $kelas->mahasiswa_count }} / {{ $kelas->kuota ?? '-' }}</span>
                             </td>
-                            <td>
-                                @if($kelas->hari_kuliah)
-                                    <div class="capitalize">{{ $kelas->hari_kuliah }}</div>
-                                    <div class="text-xs text-gray-500">{{ \Carbon\Carbon::parse($kelas->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($kelas->jam_selesai)->format('H:i') }}</div>
-                                @else
-                                    <span class="text-gray-400">-</span>
-                                @endif
-                            </td>
-                            <td class="text-center">
-                                @if($kelas->status === 'aktif')
-                                    <span class="badge badge-green">Aktif</span>
-                                @elseif($kelas->status === 'arsip')
-                                    <span class="badge badge-gray">Arsip</span>
-                                @else
-                                    <span class="badge badge-orange capitalize">{{ $kelas->status }}</span>
-                                @endif
-                            </td>
-                            <td class="text-right">
-                                <div class="flex justify-end gap-2">
-                                    <button wire:click="openEdit({{ $kelas->id }})" class="btn btn-sm btn-outline">Edit</button>
-                                </div>
+                            <td class="py-3 text-right">
+                                <button wire:click="edit({{ $kelas->id }})" class="text-blue-500 hover:text-blue-700 mr-2 text-sm font-medium">Edit</button>
+                                <button wire:click="deleteKelas({{ $kelas->id }})" wire:confirm="Yakin ingin menghapus kelas ini?" class="text-red-500 hover:text-red-700 text-sm font-medium">Hapus</button>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center py-4 text-gray-500">Belum ada data kelas.</td>
+                            <td colspan="6" class="text-center py-6 text-gray-500">Tidak ada data kelas untuk semester terpilih.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-        
-        <div class="mt-4">
-            {{ $kelasList->links(data: ['scrollTo' => false]) }}
-        </div>
     </div>
 
     <!-- Modal Form -->
-    <div x-data="{ open: @entangle('showModal') }" 
-         x-show="open" 
-         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-         style="display: none;"
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0"
-         x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-200"
-         x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0">
-        
-        <div class="card w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col" @click.outside="open = false" style="background-color: var(--bg-card)">
-            <h2 class="section-title mb-4">{{ $editId ? 'Edit Kelas' : 'Tambah Kelas' }}</h2>
-            
-            <form wire:submit.prevent="save" class="flex-1 overflow-y-auto pr-2">
-                <div class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="form-label">Mata Kuliah</label>
-                            <select wire:model="mataKuliahId" class="form-input w-full" required>
-                                <option value="">Pilih Mata Kuliah</option>
-                                @foreach($mataKuliahList as $mk)
-                                    <option value="{{ $mk->id }}">{{ $mk->kode }} - {{ $mk->nama }}</option>
-                                @endforeach
-                            </select>
-                            @error('mataKuliahId') <span class="form-error">{{ $message }}</span> @enderror
-                        </div>
-                        <div>
-                            <label class="form-label">Dosen Pengampu</label>
-                            <select wire:model="dosenId" class="form-input w-full" required>
-                                <option value="">Pilih Dosen</option>
-                                @foreach($dosenList as $dsn)
-                                    <option value="{{ $dsn->id }}">{{ $dsn->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('dosenId') <span class="form-error">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
+    @if($showModal)
+    <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" wire:click="$set('showModal', false)"></div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="form-label">Semester</label>
-                            <select wire:model="semesterId_form" class="form-input w-full" required>
-                                <option value="">Pilih Semester</option>
-                                @foreach($semesterList as $smt)
-                                    <option value="{{ $smt->id }}">{{ $smt->nama }}</option>
-                                @endforeach
-                            </select>
-                            @error('semesterId_form') <span class="form-error">{{ $message }}</span> @enderror
-                        </div>
-                        <div>
-                            <label class="form-label">Nama Kelas (mis: A, B, C)</label>
-                            <input wire:model="namaKelas" type="text" class="form-input w-full" required>
-                            @error('namaKelas') <span class="form-error">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="form-label">Hari Kuliah</label>
-                            <select wire:model="hariKuliah" class="form-input w-full">
-                                <option value="">Pilih Hari</option>
-                                <option value="senin">Senin</option>
-                                <option value="selasa">Selasa</option>
-                                <option value="rabu">Rabu</option>
-                                <option value="kamis">Kamis</option>
-                                <option value="jumat">Jumat</option>
-                                <option value="sabtu">Sabtu</option>
-                            </select>
-                            @error('hariKuliah') <span class="form-error">{{ $message }}</span> @enderror
-                        </div>
-                        <div>
-                            <label class="form-label">Jam Mulai</label>
-                            <input wire:model="jamMulai" type="time" class="form-input w-full">
-                            @error('jamMulai') <span class="form-error">{{ $message }}</span> @enderror
-                        </div>
-                        <div>
-                            <label class="form-label">Jam Selesai</label>
-                            <input wire:model="jamSelesai" type="time" class="form-input w-full">
-                            @error('jamSelesai') <span class="form-error">{{ $message }}</span> @enderror
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="form-label">Ruangan</label>
-                            <input wire:model="ruangan" type="text" class="form-input w-full" placeholder="Mis: Lab Komputer 1">
-                            @error('ruangan') <span class="form-error">{{ $message }}</span> @enderror
-                        </div>
-                        <div>
-                            <label class="form-label">Batas Kehadiran (%)</label>
-                            <input wire:model="batasKehadiran" type="number" min="0" max="100" class="form-input w-full" required>
-                            @error('batasKehadiran') <span class="form-error">{{ $message }}</span> @enderror
+            <!-- Modal panel -->
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" style="background: var(--bg-card);">
+                <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" style="color: var(--text-primary);" id="modal-title">
+                                {{ $editId ? 'Edit' : 'Tambah' }} Kelas
+                            </h3>
+                            <div class="mt-4 w-full">
+                                <form wire:submit.prevent="saveKelas">
+                                    <div class="mb-4">
+                                        <label class="form-label block mb-1">Mata Kuliah</label>
+                                        <select wire:model="mata_kuliah_id" class="form-input w-full">
+                                            <option value="">-- Pilih Mata Kuliah --</option>
+                                            @foreach($mataKuliahs as $mk)
+                                                <option value="{{ $mk->id }}">{{ $mk->kode_mata_kuliah }} - {{ $mk->nama_mata_kuliah }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('mata_kuliah_id') <span class="form-error text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label block mb-1">Dosen Pengampu</label>
+                                        <select wire:model="dosen_id" class="form-input w-full">
+                                            <option value="">-- Pilih Dosen --</option>
+                                            @foreach($dosens as $dosen)
+                                                <option value="{{ $dosen->id }}">{{ $dosen->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('dosen_id') <span class="form-error text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label block mb-1">Nama Kelas</label>
+                                        <input type="text" wire:model="nama_kelas" placeholder="Contoh: A, B, Kelas Internasional" class="form-input w-full">
+                                        @error('nama_kelas') <span class="form-error text-red-500 text-xs">{{ $message }}</span> @enderror
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="flex justify-end gap-2 mt-6 pt-4 border-t" style="border-color: var(--border)">
-                    <button type="button" wire:click="$set('showModal', false)" class="btn btn-ghost">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                <div class="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse" style="border-top: 1px solid var(--border);">
+                    <button type="button" wire:click="saveKelas" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-teal-600 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 sm:ml-3 sm:w-auto sm:text-sm btn btn-primary">
+                        Simpan
+                    </button>
+                    <button type="button" wire:click="$set('showModal', false)" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm btn btn-outline">
+                        Batal
+                    </button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
+    @endif
 </div>
