@@ -24,7 +24,7 @@ class NilaiIndex extends Component
         $nilaiTerbaik = null;
         if ($totalMk > 0) {
             $best = $nilai->sortByDesc('nilai_akhir')->first();
-            $nilaiTerbaik = $best->kelas->mataKuliah->nama_mk . ' (' . number_format($best->nilai_akhir, 2) . ')';
+            $nilaiTerbaik = $best->kelas->mataKuliah->nama . ' (' . number_format($best->nilai_akhir, 2) . ')';
         }
 
         return view('livewire.mahasiswa.nilai-index', [

@@ -2,10 +2,10 @@
 
     {{-- ── Greeting ────────────────────────────────────────────── --}}
     <div style="margin-bottom:1.75rem;">
-        <h1 style="font-size:1.4rem; font-weight:800; color:#f0f4f8; margin-bottom:0.25rem;">
-            Selamat Datang Kembali, {{ explode(' ', $user->name)[0] }}! 👋
+        <h1 style="font-size:1.4rem; font-weight:800; color:var(--text-primary); margin-bottom:0.25rem;">
+            Selamat Datang Kembali, {{ explode(' ', $user->name)[0] }}!
         </h1>
-        <p style="color:#8b95a8; font-size:0.875rem;">
+        <p style="color:var(--text-secondary); font-size:0.875rem;">
             {{ now()->locale('id')->isoFormat('dddd, D MMMM Y') }} —
             Semangat belajar hari ini!
         </p>
@@ -16,7 +16,7 @@
 
         {{-- Matakuliah --}}
         <div class="card card-teal stat-card">
-            <div class="stat-icon stat-icon-teal">📚</div>
+            <div class="stat-icon stat-icon-teal"><i class="fas fa-book"></i></div>
             <div>
                 <div class="stat-value">{{ $jumlahKelas }}</div>
                 <div class="stat-label">Matakuliah Aktif</div>
@@ -25,7 +25,7 @@
 
         {{-- Materi Selesai --}}
         <div class="card card-green stat-card">
-            <div class="stat-icon stat-icon-green">✅</div>
+            <div class="stat-icon stat-icon-green"><i class="fas fa-check-circle"></i></div>
             <div>
                 <div class="stat-value">{{ $totalSelesai }}</div>
                 <div class="stat-label">Materi Dipelajari</div>
@@ -34,7 +34,7 @@
 
         {{-- Tugas Pending --}}
         <div class="card card-orange stat-card">
-            <div class="stat-icon stat-icon-orange">📝</div>
+            <div class="stat-icon stat-icon-orange"><i class="fas fa-edit"></i></div>
             <div>
                 <div class="stat-value">{{ $jumlahTugas }}</div>
                 <div class="stat-label">Tugas Mendatang</div>
@@ -43,7 +43,7 @@
 
         {{-- Poin --}}
         <div class="card card-purple stat-card">
-            <div class="stat-icon stat-icon-purple">⭐</div>
+            <div class="stat-icon stat-icon-purple"><i class="fas fa-star" style="color:var(--warning);"></i></div>
             <div>
                 <div class="stat-value">{{ $user->totalPoin() }}</div>
                 <div class="stat-label">Total Poin</div>
@@ -62,8 +62,8 @@
 
     @if($kelasList->isEmpty())
         <div class="card" style="text-align:center; padding:3rem;">
-            <div style="font-size:3rem; margin-bottom:1rem;">📚</div>
-            <div style="color:#8b95a8; font-size:0.9rem;">Kamu belum terdaftar di matakuliah apapun.</div>
+            <div style="font-size:3rem; margin-bottom:1rem;"><i class="fas fa-book"></i></div>
+            <div style="color:var(--text-secondary); font-size:0.9rem;">Kamu belum terdaftar di matakuliah apapun.</div>
         </div>
     @else
         <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:1rem; margin-bottom:2rem;">
@@ -72,7 +72,7 @@
             <div class="course-card">
                 {{-- Thumbnail --}}
                 <div class="course-thumbnail-placeholder">
-                    💻
+                    <i class="fas fa-laptop-code"></i>
                 </div>
 
                 <div class="course-body">
@@ -81,13 +81,13 @@
 
                     <div class="course-title">{{ $kelas->mataKuliah->nama }}</div>
                     <div class="course-teacher" style="margin-bottom:0.875rem;">
-                        👨‍🏫 {{ $kelas->dosen->name }}
+                        <i class="fas fa-chalkboard-teacher"></i> {{ $kelas->dosen->name }}
                     </div>
 
                     {{-- Progress --}}
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.4rem;">
-                        <span style="font-size:0.72rem; color:#8b95a8;">Progress Materi</span>
-                        <span style="font-size:0.72rem; color:#14a7a0; font-weight:600;">{{ $persen }}%</span>
+                        <span style="font-size:0.72rem; color:var(--text-secondary);">Progress Materi</span>
+                        <span style="font-size:0.72rem; color:var(--teal); font-weight:600;">{{ $persen }}%</span>
                     </div>
                     <div class="progress-wrap" style="margin-bottom:0.875rem;">
                         <div class="progress-bar" style="width:{{ $persen }}%;"></div>
@@ -109,18 +109,18 @@
         {{-- Tugas Mendekati Deadline --}}
         <div class="card">
             <div class="section-header" style="margin-bottom:1rem;">
-                <div class="section-title" style="font-size:0.9rem;">⏰ Tugas Mendekati Deadline</div>
+                <div class="section-title" style="font-size:0.9rem;"><i class="fas fa-clock" style="color:var(--danger);"></i> Tugas Mendekati Deadline</div>
                 <a href="{{ route('mahasiswa.tugas.index') }}" class="btn btn-ghost btn-sm">Semua</a>
             </div>
 
             @forelse($tugas as $t)
             <a href="{{ route('mahasiswa.tugas.detail', $t) }}"
-               style="display:flex; align-items:center; justify-content:space-between; padding:0.7rem; border-radius:10px; margin-bottom:0.4rem; text-decoration:none; background:rgba(255,255,255,0.03); transition:background 0.2s;"
-               onmouseover="this.style.background='rgba(255,255,255,0.07)'"
-               onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+               style="display:flex; align-items:center; justify-content:space-between; padding:0.7rem; border-radius:10px; margin-bottom:0.4rem; text-decoration:none; background:var(--input-bg); transition:background 0.2s;"
+               onmouseover="this.style.background='var(--border)'"
+               onmouseout="this.style.background='var(--input-bg)'">
                 <div>
-                    <div style="font-size:0.82rem; font-weight:600; color:#f0f4f8; margin-bottom:2px;">{{ Str::limit($t->judul, 30) }}</div>
-                    <div style="font-size:0.7rem; color:#8b95a8;">{{ $t->kelas->mataKuliah->nama }}</div>
+                    <div style="font-size:0.82rem; font-weight:600; color:var(--text-primary); margin-bottom:2px;">{{ Str::limit($t->judul, 30) }}</div>
+                    <div style="font-size:0.7rem; color:var(--text-secondary);">{{ $t->kelas->mataKuliah->nama }}</div>
                 </div>
                 @php
                     $diff   = now()->diffInHours($t->deadline);
@@ -131,8 +131,8 @@
                 </span>
             </a>
             @empty
-            <div style="text-align:center; padding:1.5rem 0; color:#8b95a8; font-size:0.85rem;">
-                🎉 Tidak ada tugas mendekat!
+            <div style="text-align:center; padding:1.5rem 0; color:var(--text-secondary); font-size:0.85rem;">
+                <i class="fas fa-glass-cheers"></i> Tidak ada tugas mendekat!
             </div>
             @endforelse
         </div>
@@ -140,20 +140,20 @@
         {{-- Kuis Terbuka --}}
         <div class="card">
             <div class="section-header" style="margin-bottom:1rem;">
-                <div class="section-title" style="font-size:0.9rem;">⚡ Kuis Tersedia</div>
+                <div class="section-title" style="font-size:0.9rem;"><i class="fas fa-bolt" style="color:var(--warning);"></i> Kuis Tersedia</div>
                 <a href="{{ route('mahasiswa.kuis.index') }}" class="btn btn-ghost btn-sm">Semua</a>
             </div>
 
             @forelse($kuisTerbuka as $k)
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:0.7rem; border-radius:10px; background:rgba(255,255,255,0.03); margin-bottom:0.4rem;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:0.7rem; border-radius:10px; background:var(--input-bg); margin-bottom:0.4rem;">
                 <div>
-                    <div style="font-size:0.82rem; font-weight:600; color:#f0f4f8; margin-bottom:2px;">{{ Str::limit($k->judul, 28) }}</div>
-                    <div style="font-size:0.7rem; color:#8b95a8;">⏱ {{ $k->durasi_menit }} menit</div>
+                    <div style="font-size:0.82rem; font-weight:600; color:var(--text-primary); margin-bottom:2px;">{{ Str::limit($k->judul, 28) }}</div>
+                    <div style="font-size:0.7rem; color:var(--text-secondary);"><i class="fas fa-stopwatch"></i> {{ $k->durasi_menit }} menit</div>
                 </div>
                 <a href="{{ route('mahasiswa.kuis.engine', $k) }}" class="btn btn-primary btn-sm">Mulai</a>
             </div>
             @empty
-            <div style="text-align:center; padding:1.5rem 0; color:#8b95a8; font-size:0.85rem;">
+            <div style="text-align:center; padding:1.5rem 0; color:var(--text-secondary); font-size:0.85rem;">
                 Tidak ada kuis aktif saat ini.
             </div>
             @endforelse

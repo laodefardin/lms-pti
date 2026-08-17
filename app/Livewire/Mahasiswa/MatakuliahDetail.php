@@ -12,14 +12,23 @@ class MatakuliahDetail extends Component
 {
     public Kelas $kelas;
 
-    public function mount(Kelas $kelas)
+    public function mount(string $slug)
     {
+        // Cari kelas berdasarkan slug (nama_matakuliah-nama_kelas) atau ID
+        $kelasModel = \App\Models\Kelas::with('mataKuliah')
+            ->get()
+            ->first(function ($k) use ($slug) {
+                return $k->slug === $slug || (string) $k->id === $slug;
+            });
+
+        abort_if(!$kelasModel, 404);
+
         // Pastikan mahasiswa ini terdaftar di kelas
         abort_unless(
-            $kelas->mahasiswa()->where('mahasiswa_id', Auth::id())->exists(),
+            $kelasModel->mahasiswa()->where('mahasiswa_id', Auth::id())->exists(),
             403, 'Kamu tidak terdaftar di kelas ini.'
         );
-        $this->kelas = $kelas;
+        $this->kelas = $kelasModel;
     }
 
     public function render()

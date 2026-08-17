@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $kuis->judul ?? 'Kuis' }} — LMS PTI</title>
+    <title>{{ $kuis->judul ?? 'Kuis' }} — LMS Pendidikan Teknologi Informasi</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
     <style>
@@ -71,6 +71,7 @@
         .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:100; }
         .modal-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:2rem; max-width:420px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <div class="kuis-shell" x-data="{
@@ -106,7 +107,7 @@
         </div>
         <div style="display:flex; align-items:center; gap:1rem;">
             <div class="timer-display" :class="timerClass">
-                ⏱ <span x-text="formatTime(waktu)">00:00</span>
+                <i class="fas fa-clock"></i> <span x-text="formatTime(waktu)">00:00</span>
             </div>
             @include('components.theme-toggle')
             <button wire:click="$set('confirmSubmit',true)" class="btn btn-primary btn-sm">Selesai & Kumpulkan</button>
@@ -220,7 +221,7 @@
                     </button>
                     @else
                     <button wire:click="$set('confirmSubmit',true)" class="btn btn-primary">
-                        ✅ Selesai & Kumpulkan
+                        <i class="fas fa-check-circle"></i> Selesai & Kumpulkan
                     </button>
                     @endif
                 </div>
@@ -244,7 +245,7 @@
             <div style="display:flex; gap:0.75rem;">
                 <button wire:click="$set('confirmSubmit',false)" class="btn btn-ghost btn-full">Batal, lanjutkan</button>
                 <button wire:click="submitKuis" class="btn btn-primary btn-full">
-                    <span wire:loading.remove wire:target="submitKuis">✅ Ya, Kumpulkan</span>
+                    <span wire:loading.remove wire:target="submitKuis"><i class="fas fa-check-circle"></i> Ya, Kumpulkan</span>
                     <span wire:loading wire:target="submitKuis">Memproses...</span>
                 </button>
             </div>
@@ -260,7 +261,7 @@
                 $nilai = $sesi->nilai_akhir ?? 0;
                 $lulus = $nilai >= ($kuis->passing_grade ?? 60);
             @endphp
-            <div style="font-size:4rem; margin-bottom:1.25rem;">{{ $lulus ? '🎉' : '📚' }}</div>
+            <div style="font-size:4rem; margin-bottom:1.25rem;">{{ $lulus ? '<i class="fas fa-glass-cheers"></i>' : '<i class="fas fa-book"></i>' }}</div>
             <h1 style="font-size:1.6rem; font-weight:800; color:var(--text-primary); margin-bottom:0.5rem;">
                 {{ $lulus ? 'Selamat, Lulus!' : 'Kuis Selesai' }}
             </h1>

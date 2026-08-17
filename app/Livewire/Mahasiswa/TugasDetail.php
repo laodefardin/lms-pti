@@ -27,7 +27,7 @@ class TugasDetail extends Component
     {
         $user = Auth::user();
         
-        $isEnrolled = $tugas->kelas->mahasiswa()->where('user_id', $user->id)->exists();
+        $isEnrolled = $tugas->kelas->mahasiswa()->where('mahasiswa_id', $user->id)->exists();
         if (!$isEnrolled) {
             abort(403, 'Anda tidak terdaftar di kelas ini.');
         }

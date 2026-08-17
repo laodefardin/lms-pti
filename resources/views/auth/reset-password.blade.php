@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password — LMS PTI Unsulbar</title>
+    <title>Reset Password — LMS Pendidikan Teknologi Informasi Unsulbar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         .auth-bg { min-height:100vh; background:radial-gradient(ellipse at 20% 20%, rgba(20,167,160,0.18) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(139,92,246,0.12) 0%, transparent 55%), #0f1117; display:flex; align-items:center; justify-content:center; padding:2rem; position:relative; overflow:hidden; }
@@ -16,7 +16,7 @@
         .auth-input { width:100%; background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.75rem 0.75rem 0.75rem 2.75rem; color:#f0f4f8; font-size:0.9rem; font-family:'Inter',sans-serif; transition:all 0.2s; outline:none; }
         .auth-input:focus { border-color:#14a7a0; background:rgba(20,167,160,0.05); box-shadow:0 0 0 3px rgba(20,167,160,0.1); }
         .auth-input::placeholder { color:#5a6478; }
-        .auth-btn { width:100%; background:linear-gradient(135deg,#14a7a0,#0e8a84); color:white; font-weight:700; font-size:0.95rem; padding:0.85rem; border-radius:12px; border:none; cursor:pointer; transition:all 0.25s; box-shadow:0 6px 20px rgba(20,167,160,0.4); font-family:'Inter',sans-serif; }
+        .auth-btn { width:100%; background:#14a7a0; color:white; font-weight:700; font-size:0.95rem; padding:0.85rem; border-radius:12px; border:none; cursor:pointer; transition:all 0.25s; box-shadow:0 6px 20px rgba(20,167,160,0.4); font-family:'Inter',sans-serif; }
         .auth-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(20,167,160,0.55); }
         .input-group { position:relative; }
         .input-icon { position:absolute; left:0.875rem; top:50%; transform:translateY(-50%); color:#5a6478; pointer-events:none; }
@@ -31,7 +31,7 @@
 
     <div class="auth-card fade-in">
         <div style="text-align:center; margin-bottom:2rem;">
-            <div style="width:56px; height:56px; background:linear-gradient(135deg,#14a7a0,#0e8a84); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; box-shadow:0 8px 24px rgba(20,167,160,0.45);">
+            <div style="width:56px; height:56px; background:#14a7a0; border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; box-shadow:0 8px 24px rgba(20,167,160,0.45);">
                 <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                 </svg>

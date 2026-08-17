@@ -14,13 +14,13 @@ class AbsensiIndex extends Component
     public function render()
     {
         $user = Auth::user();
-        $kelasIds = $user->mahasiswaKelas()->pluck('kelas.id');
+        $kelasIds = $user->kelas()->pluck('kelas.id');
 
         $kelasList = Kelas::whereIn('id', $kelasIds)
-            ->with(['mataKuliah', 'dosen', 'pertemuan.absensi' => function($q) use ($user) {
-                $q->where('mahasiswa_id', $user->id);
-            }])
+            ->with(['mataKuliah', 'dosen', 'pertemuan.absensi'])
             ->get();
+            
+        $absensiMahasiswa = AbsensiMahasiswa::where('mahasiswa_id', $user->id)->get()->keyBy('absensi_id');
             
         $dataKehadiran = [];
 
@@ -31,8 +31,12 @@ class AbsensiIndex extends Component
             $pertemuanDetail = [];
 
             foreach ($k->pertemuan as $p) {
-                $abs = $p->absensi->first();
-                $status = $abs ? $abs->status : 'belum_ada';
+                $abs = $p->absensi;
+                $status = 'belum_ada';
+                
+                if ($abs && isset($absensiMahasiswa[$abs->id])) {
+                    $status = $absensiMahasiswa[$abs->id]->status;
+                }
                 
                 if ($status === 'hadir') $hadir++;
                 elseif ($status === 'sakit') $sakit++;

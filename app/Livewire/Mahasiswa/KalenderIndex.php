@@ -17,9 +17,9 @@ class KalenderIndex extends Component
     public function render()
     {
         $user = Auth::user();
-        $kelasIds = $user->mahasiswaKelas()->pluck('kelas.id');
+        $kelasIds = $user->kelas()->pluck('kelas.id');
         
-        $activeSemester = Semester::where('is_active', true)->first();
+        $activeSemester = Semester::where('is_aktif', true)->first();
         
         $events = [];
 
@@ -39,7 +39,7 @@ class KalenderIndex extends Component
 
         $tugas = Tugas::whereIn('kelas_id', $kelasIds)
             ->where('is_published', true)
-            ->where('batas_waktu', '>=', now()->subDays(7))
+            ->where('deadline', '>=', now()->subDays(7))
             ->with('kelas.mataKuliah')
             ->get();
             
@@ -47,8 +47,8 @@ class KalenderIndex extends Component
             $events[] = [
                 'id' => 'tugas_'.$t->id,
                 'title' => 'Tugas: ' . $t->judul . ' (' . $t->kelas->mataKuliah->nama_mk . ')',
-                'date' => Carbon::parse($t->batas_waktu)->format('Y-m-d'),
-                'time' => Carbon::parse($t->batas_waktu)->format('H:i'),
+                'date' => Carbon::parse($t->deadline)->format('Y-m-d'),
+                'time' => Carbon::parse($t->deadline)->format('H:i'),
                 'type' => 'tugas',
                 'color' => 'purple',
                 'url' => route('mahasiswa.tugas.detail', $t->id)
@@ -57,7 +57,7 @@ class KalenderIndex extends Component
 
         $kuis = Kuis::whereIn('kelas_id', $kelasIds)
             ->where('is_published', true)
-            ->where('waktu_mulai', '>=', now()->subDays(7))
+            ->where('buka_at', '>=', now()->subDays(7))
             ->with('kelas.mataKuliah')
             ->get();
             
@@ -65,8 +65,8 @@ class KalenderIndex extends Component
             $events[] = [
                 'id' => 'kuis_'.$k->id,
                 'title' => 'Kuis: ' . $k->judul . ' (' . $k->kelas->mataKuliah->nama_mk . ')',
-                'date' => Carbon::parse($k->waktu_mulai)->format('Y-m-d'),
-                'time' => Carbon::parse($k->waktu_mulai)->format('H:i'),
+                'date' => Carbon::parse($k->buka_at)->format('Y-m-d'),
+                'time' => Carbon::parse($k->buka_at)->format('H:i'),
                 'type' => 'kuis',
                 'color' => 'blue',
                 'url' => '#'

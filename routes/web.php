@@ -44,10 +44,10 @@ Route::middleware(['auth', 'role:mahasiswa'])
 
         // Matakuliah
         Route::get('/matakuliah', \App\Livewire\Mahasiswa\MatakuliahIndex::class)->name('matakuliah.index');
-        Route::get('/matakuliah/{kelas}', \App\Livewire\Mahasiswa\MatakuliahDetail::class)->name('matakuliah.detail');
+        Route::get('/matakuliah/{slug}', \App\Livewire\Mahasiswa\MatakuliahDetail::class)->name('matakuliah.detail');
 
         // Materi Viewer (3-Panel)
-        Route::get('/matakuliah/{kelas}/materi/{konten}', \App\Livewire\Mahasiswa\MateriViewer::class)->name('materi.viewer');
+        Route::get('/matakuliah/{slug}/materi/{konten}', \App\Livewire\Mahasiswa\MateriViewer::class)->name('materi.viewer');
 
         // Tugas
         Route::get('/tugas', \App\Livewire\Mahasiswa\TugasIndex::class)->name('tugas.index');

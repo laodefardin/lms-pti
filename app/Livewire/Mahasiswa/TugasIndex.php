@@ -16,14 +16,14 @@ class TugasIndex extends Component
     public function render()
     {
         $user = Auth::user();
-        $kelasIds = $user->mahasiswaKelas()->pluck('kelas.id');
+        $kelasIds = $user->kelas()->pluck('kelas.id');
 
         $query = Tugas::whereIn('kelas_id', $kelasIds)
             ->where('is_published', true)
             ->with(['kelas.mataKuliah', 'pengumpulanTugas' => function($q) use ($user) {
                 $q->where('mahasiswa_id', $user->id);
             }])
-            ->orderBy('batas_waktu', 'asc');
+            ->orderBy('deadline', 'asc');
 
         $tugas = $query->get()->filter(function($t) {
             $pengumpulan = $t->pengumpulanTugas->first();

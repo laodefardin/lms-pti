@@ -1,53 +1,46 @@
 <div class="fade-in">
-    <div class="mb-6">
+    <div style="margin-bottom: 1.5rem;">
         <h1 class="section-title">Kalender Akademik & Jadwal</h1>
         <p class="section-sub text-muted">Pantau jadwal akademik, batas waktu tugas, dan kuis.</p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
         <!-- Calendar Grid (LEFT) -->
-        <div class="lg:col-span-2">
-            <div class="card p-6" style="background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 0.5rem; box-shadow: var(--shadow-card);"
+        <div style="grid-column: span 2;">
+            <div class="card" style="padding: 1.5rem;"
                  x-data="calendarData()" 
                  x-init="initCalendar()">
                 
-                <div class="flex items-center justify-between mb-4">
-                    <button @click="prevMonth" class="p-2 rounded-md hover:bg-gray-100" style="color: var(--text-secondary);">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                    <button @click="prevMonth" style="padding: 0.5rem; border-radius: 0.375rem; background: none; border: none; cursor: pointer; color: var(--text-secondary);">
+                        <i class="fas fa-chevron-left"></i>
                     </button>
-                    <h2 class="text-xl font-bold" style="color: var(--text-primary);" x-text="monthNames[month] + ' ' + year"></h2>
-                    <button @click="nextMonth" class="p-2 rounded-md hover:bg-gray-100" style="color: var(--text-secondary);">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    <h2 style="font-size: 1.25rem; font-weight: bold; color: var(--text-primary); margin: 0;" x-text="monthNames[month] + ' ' + year"></h2>
+                    <button @click="nextMonth" style="padding: 0.5rem; border-radius: 0.375rem; background: none; border: none; cursor: pointer; color: var(--text-secondary);">
+                        <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
 
-                <div class="grid grid-cols-7 gap-1 text-center mb-2">
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; text-align: center; margin-bottom: 0.5rem;">
                     <template x-for="day in ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab']">
-                        <div class="text-xs font-semibold py-2" style="color: var(--text-muted);" x-text="day"></div>
+                        <div style="font-size: 0.75rem; font-weight: 600; padding: 0.5rem 0; color: var(--text-muted);" x-text="day"></div>
                     </template>
                 </div>
 
-                <div class="grid grid-cols-7 gap-1">
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem;">
                     <template x-for="blank in blankdays">
-                        <div class="p-2 text-center border border-transparent"></div>
+                        <div style="padding: 0.5rem; text-align: center; border: 1px solid transparent;"></div>
                     </template>
                     <template x-for="(date, dateIndex) in no_of_days" :key="dateIndex">
-                        <div class="p-2 min-h-[80px] border rounded-md relative transition-colors" 
-                             :class="{
-                                'bg-teal-50 border-teal-200': isToday(date),
-                                'border-gray-100 bg-white': !isToday(date)
-                             }"
-                             style="border-color: var(--border);">
-                            <div class="text-sm font-medium" :class="isToday(date) ? 'text-teal-700' : 'text-gray-700'" x-text="date" style="color: var(--text-primary);"></div>
+                        <div style="padding: 0.5rem; min-height: 5rem; border: 1px solid var(--border); border-radius: 0.375rem; position: relative; transition: background-color 0.2s;" 
+                             :style="isToday(date) ? 'background-color: var(--teal-light); border-color: var(--border-teal);' : 'background-color: var(--bg-card);'">
+                            <div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem;" 
+                                 :style="isToday(date) ? 'color: var(--teal-dark);' : 'color: var(--text-primary);'" x-text="date"></div>
                             
-                            <div class="mt-1 space-y-1 overflow-y-auto max-h-[50px]">
+                            <div style="margin-top: 0.25rem; display: flex; flex-direction: column; gap: 0.25rem; overflow-y: auto; max-height: 3.125rem;">
                                 <template x-for="event in getEventsForDate(date)">
-                                    <div class="text-[10px] leading-tight p-1 rounded truncate cursor-pointer"
-                                         :class="{
-                                            'bg-purple-100 text-purple-800': event.color === 'purple',
-                                            'bg-blue-100 text-blue-800': event.color === 'blue',
-                                            'bg-gray-100 text-gray-800': event.color === 'gray'
-                                         }"
+                                    <div style="font-size: 0.625rem; line-height: 1.25; padding: 0.25rem; border-radius: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer;"
+                                         :style="event.color === 'purple' ? 'background-color: rgba(147, 51, 234, 0.1); color: #6b21a8;' : (event.color === 'blue' ? 'background-color: rgba(59, 130, 246, 0.1); color: #1e40af;' : 'background-color: var(--input-bg); color: var(--text-secondary);')"
                                          :title="event.title"
                                          @click="if(event.url && event.url !== '#') window.location.href = event.url">
                                         <span x-show="event.time" x-text="event.time + ' '"></span>
@@ -62,11 +55,11 @@
         </div>
 
         <!-- Event List (RIGHT) -->
-        <div class="lg:col-span-1">
-            <div class="card p-6" style="background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 0.5rem; box-shadow: var(--shadow-card);">
-                <h3 class="text-lg font-bold mb-4 border-b pb-2" style="color: var(--text-primary); border-color: var(--border);">Acara Mendatang</h3>
+        <div>
+            <div class="card" style="padding: 1.5rem;">
+                <h3 style="font-size: 1.125rem; font-weight: bold; margin: 0 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); color: var(--text-primary);">Acara Mendatang</h3>
                 
-                <div class="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+                <div style="display: flex; flex-direction: column; gap: 1rem; max-height: 37.5rem; overflow-y: auto; padding-right: 0.5rem;">
                     @php
                         $upcomingEvents = collect($events)->filter(function($e) {
                             return strtotime($e['date']) >= strtotime('today');
@@ -74,37 +67,37 @@
                     @endphp
 
                     @forelse($upcomingEvents as $e)
-                        <div class="p-3 rounded-md border flex items-start" style="border-color: var(--border); background-color: #f8fafc;">
-                            <div class="mr-3 mt-1">
+                        <div style="padding: 0.75rem; border-radius: 0.375rem; border: 1px solid var(--border); background-color: var(--input-bg); display: flex; align-items: flex-start;">
+                            <div style="margin-right: 0.75rem; margin-top: 0.25rem;">
                                 @if($e['color'] === 'purple')
-                                    <div class="w-3 h-3 rounded-full" style="background-color: #9333ea;"></div>
+                                    <div style="width: 0.75rem; height: 0.75rem; border-radius: 50%; background-color: #9333ea;"></div>
                                 @elseif($e['color'] === 'blue')
-                                    <div class="w-3 h-3 rounded-full" style="background-color: #3b82f6;"></div>
+                                    <div style="width: 0.75rem; height: 0.75rem; border-radius: 50%; background-color: #3b82f6;"></div>
                                 @else
-                                    <div class="w-3 h-3 rounded-full" style="background-color: #6b7280;"></div>
+                                    <div style="width: 0.75rem; height: 0.75rem; border-radius: 50%; background-color: #6b7280;"></div>
                                 @endif
                             </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-semibold" style="color: var(--text-primary);">{{ $e['title'] }}</p>
-                                <p class="text-xs mt-1" style="color: var(--text-secondary);">
+                            <div style="flex: 1;">
+                                <p style="font-size: 0.875rem; font-weight: 600; margin: 0; color: var(--text-primary);">{{ $e['title'] }}</p>
+                                <p style="font-size: 0.75rem; margin: 0.25rem 0 0 0; color: var(--text-secondary);">
                                     {{ \Carbon\Carbon::parse($e['date'])->format('d M Y') }}
                                     @if(isset($e['time'])) - {{ $e['time'] }} @endif
                                 </p>
                                 @if(isset($e['url']) && $e['url'] !== '#')
-                                    <a href="{{ $e['url'] }}" class="text-[10px] mt-2 inline-block hover:underline" style="color: var(--teal);">Lihat Detail &rarr;</a>
+                                    <a href="{{ $e['url'] }}" style="font-size: 0.625rem; margin-top: 0.5rem; display: inline-block; color: var(--teal); text-decoration: none;">Lihat Detail &rarr;</a>
                                 @endif
                             </div>
                         </div>
                     @empty
-                        <p class="text-sm text-center py-4" style="color: var(--text-muted);">Tidak ada acara mendatang.</p>
+                        <p style="font-size: 0.875rem; text-align: center; padding: 1rem 0; margin: 0; color: var(--text-muted);">Tidak ada acara mendatang.</p>
                     @endforelse
                 </div>
 
-                <div class="mt-6 pt-4 border-t" style="border-color: var(--border);">
-                    <p class="text-xs font-semibold mb-2" style="color: var(--text-secondary);">Keterangan:</p>
-                    <div class="flex items-center text-xs mb-1"><div class="w-2 h-2 rounded-full mr-2" style="background-color: #9333ea;"></div> Tugas</div>
-                    <div class="flex items-center text-xs mb-1"><div class="w-2 h-2 rounded-full mr-2" style="background-color: #3b82f6;"></div> Kuis</div>
-                    <div class="flex items-center text-xs"><div class="w-2 h-2 rounded-full mr-2" style="background-color: #6b7280;"></div> Kalender Akademik</div>
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                    <p style="font-size: 0.75rem; font-weight: 600; margin: 0 0 0.5rem 0; color: var(--text-secondary);">Keterangan:</p>
+                    <div style="display: flex; align-items: center; font-size: 0.75rem; margin-bottom: 0.25rem;"><div style="width: 0.5rem; height: 0.5rem; border-radius: 50%; margin-right: 0.5rem; background-color: #9333ea;"></div> Tugas</div>
+                    <div style="display: flex; align-items: center; font-size: 0.75rem; margin-bottom: 0.25rem;"><div style="width: 0.5rem; height: 0.5rem; border-radius: 50%; margin-right: 0.5rem; background-color: #3b82f6;"></div> Kuis</div>
+                    <div style="display: flex; align-items: center; font-size: 0.75rem;"><div style="width: 0.5rem; height: 0.5rem; border-radius: 50%; margin-right: 0.5rem; background-color: #6b7280;"></div> Kalender Akademik</div>
                 </div>
             </div>
         </div>
@@ -119,7 +112,7 @@
                 no_of_days: [],
                 blankdays: [],
                 monthNames: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-                events: {!! $eventsJson !!},
+                events: {!! $eventsJson ?? '[]' !!},
                 
                 initCalendar() {
                     let today = new Date();

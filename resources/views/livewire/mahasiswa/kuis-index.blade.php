@@ -1,13 +1,13 @@
 <div class="fade-in">
 
     <div style="margin-bottom:1.5rem;">
-        <h1 style="font-size:1.4rem; font-weight:800; color:var(--text-primary); margin-bottom:0.25rem;">Kuis & Ujian ⚡</h1>
+        <h1 style="font-size:1.4rem; font-weight:800; color:var(--text-primary); margin-bottom:0.25rem;">Kuis & Ujian</h1>
         <p style="color:var(--text-secondary); font-size:0.875rem;">Semua kuis dan ujian yang tersedia untuk kamu</p>
     </div>
 
     @if($kuisList->isEmpty())
         <div class="card" style="text-align:center; padding:4rem 2rem;">
-            <div style="font-size:3.5rem; margin-bottom:1rem;">⚡</div>
+            <div style="font-size:3.5rem; margin-bottom:1rem;"><i class="fas fa-bolt" style="color:var(--warning);"></i></div>
             <div style="font-size:1rem; font-weight:600; color:var(--text-primary); margin-bottom:0.5rem;">Belum ada kuis aktif</div>
             <div style="color:var(--text-secondary); font-size:0.85rem;">Kuis akan muncul di sini ketika dosen mengaktifkannya.</div>
         </div>
@@ -20,18 +20,18 @@
             $status = $item['status'];
 
             $statusConfig = [
-                'belum_buka'     => ['label'=>'Belum Dibuka',    'class'=>'badge-gray',   'icon'=>'🔒'],
-                'bisa_mulai'     => ['label'=>'Bisa Dikerjakan', 'class'=>'badge-teal',   'icon'=>'▶️'],
-                'sedang_berjalan'=> ['label'=>'Sedang Dikerjakan','class'=>'badge-orange','icon'=>'⏳'],
-                'selesai'        => ['label'=>'Selesai',         'class'=>'badge-green',  'icon'=>'✅'],
-                'kadaluarsa'     => ['label'=>'Sudah Tutup',     'class'=>'badge-red',    'icon'=>'⛔'],
-            ][$status] ?? ['label'=>$status, 'class'=>'badge-gray', 'icon'=>'❓'];
+                'belum_buka'     => ['label'=>'Belum Dibuka',    'class'=>'badge-gray',   'icon'=>'<i class="fas fa-lock"></i>'],
+                'bisa_mulai'     => ['label'=>'Bisa Dikerjakan', 'class'=>'badge-teal',   'icon'=>'<i class="fas fa-play-circle" style="color:var(--teal);"></i>'],
+                'sedang_berjalan'=> ['label'=>'Sedang Dikerjakan','class'=>'badge-orange','icon'=>'<i class="fas fa-hourglass-half" style="color:var(--orange);"></i>'],
+                'selesai'        => ['label'=>'Selesai',         'class'=>'badge-green',  'icon'=>'<i class="fas fa-check-circle" style="color:var(--success);"></i>'],
+                'kadaluarsa'     => ['label'=>'Sudah Tutup',     'class'=>'badge-red',    'icon'=>'<i class="fas fa-times-circle" style="color:var(--danger);"></i>'],
+            ][$status] ?? ['label'=>$status, 'class'=>'badge-gray', 'icon'=>'<i class="fas fa-question-circle"></i>'];
         @endphp
 
         <div class="card" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; {{ $status === 'bisa_mulai' ? 'border-color:var(--border-teal); background:linear-gradient(135deg,var(--teal-dim),var(--bg-card));' : '' }}">
             <div style="display:flex; align-items:center; gap:1rem; flex:1; min-width:0;">
                 {{-- Icon --}}
-                <div style="width:48px; height:48px; background:var(--input-bg); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0;">{{ $statusConfig['icon'] }}</div>
+                <div style="width:48px; height:48px; background:var(--input-bg); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0;">{!! $statusConfig['icon'] !!}</div>
 
                 <div style="min-width:0;">
                     <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.3rem;">
@@ -43,11 +43,11 @@
                     </div>
                     <div style="font-size:0.95rem; font-weight:700; color:var(--text-primary); margin-bottom:0.2rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $kuis->judul }}</div>
                     <div style="font-size:0.75rem; color:var(--text-secondary); display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
-                        <span>📚 {{ $kuis->kelas->mataKuliah->nama }}</span>
-                        <span>⏱ {{ $kuis->durasi_menit }} menit</span>
-                        <span>📝 {{ $kuis->soal->count() }} soal</span>
+                        <span><i class="fas fa-book"></i> {{ $kuis->kelas->mataKuliah->nama }}</span>
+                        <span><i class="fas fa-clock"></i> {{ $kuis->durasi_menit }} menit</span>
+                        <span><i class="fas fa-edit"></i> {{ $kuis->soal->count() }} soal</span>
                         @if($kuis->passing_grade)
-                        <span>🎯 KKM {{ $kuis->passing_grade }}</span>
+                        <span><i class="fas fa-bullseye"></i> KKM {{ $kuis->passing_grade }}</span>
                         @endif
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 <div class="fade-in">
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="section-title">Manajemen Mata Kuliah 📚</h1>
+            <h1 class="section-title">Manajemen Mata Kuliah</h1>
             <p class="section-sub">Kelola data mata kuliah, SKS, dan semester.</p>
         </div>
         <button wire:click="openCreate" class="btn btn-primary">

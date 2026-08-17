@@ -14,7 +14,7 @@
         {{-- Main Form --}}
         <div>
             <div class="card" style="margin-bottom:1.25rem;">
-                <div class="section-title" style="margin-bottom:1.25rem;">📝 Informasi Materi</div>
+                <div class="section-title" style="margin-bottom:1.25rem;"><i class="fas fa-edit"></i> Informasi Materi</div>
 
                 {{-- Judul --}}
                 <div style="margin-bottom:1rem;">
@@ -28,15 +28,15 @@
                     <label class="form-label">Tipe Konten *</label>
                     <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:0.5rem;">
                         @foreach([
-                            ['val'=>'artikel', 'icon'=>'📝', 'label'=>'Artikel'],
-                            ['val'=>'video',   'icon'=>'🎬', 'label'=>'Video'],
-                            ['val'=>'pdf',     'icon'=>'📄', 'label'=>'PDF'],
-                            ['val'=>'kode',    'icon'=>'💻', 'label'=>'Kode'],
-                            ['val'=>'link',    'icon'=>'🔗', 'label'=>'Link'],
+                            ['val'=>'artikel', 'icon'=>'fas fa-edit', 'label'=>'Artikel'],
+                            ['val'=>'video',   'icon'=>'fas fa-video', 'label'=>'Video'],
+                            ['val'=>'pdf',     'icon'=>'fas fa-file-pdf', 'label'=>'PDF'],
+                            ['val'=>'kode',    'icon'=>'fas fa-laptop-code', 'label'=>'Kode'],
+                            ['val'=>'link',    'icon'=>'fas fa-link', 'label'=>'Link'],
                         ] as $t)
                         <button type="button" wire:click="$set('tipe','{{ $t['val'] }}')"
                                 style="padding:0.6rem; border-radius:10px; border:1.5px solid {{ $tipe === $t['val'] ? 'var(--teal)' : 'var(--border)' }}; background:{{ $tipe === $t['val'] ? 'var(--teal-dim)' : 'var(--input-bg)' }}; cursor:pointer; transition:all 0.15s; display:flex; flex-direction:column; align-items:center; gap:0.25rem;">
-                            <span style="font-size:1.2rem;">{{ $t['icon'] }}</span>
+                            <i class="{{ $t['icon'] }}" style="font-size:1.2rem; color:{{ $tipe === $t['val'] ? 'var(--teal)' : 'var(--text-secondary)' }};"></i>
                             <span style="font-size:0.68rem; font-weight:600; color:{{ $tipe === $t['val'] ? 'var(--teal)' : 'var(--text-secondary)' }};">{{ $t['label'] }}</span>
                         </button>
                         @endforeach
@@ -75,7 +75,7 @@
                     @error('url') <div class="form-error">{{ $message }}</div> @enderror
                     @if($url && Str::contains($url, ['youtube', 'youtu.be']))
                     <div style="margin-top:0.75rem; padding:0.75rem; background:var(--input-bg); border-radius:8px; font-size:0.8rem; color:var(--text-secondary);">
-                        ✅ YouTube URL terdeteksi — video akan di-embed otomatis
+                        <i class="fas fa-check-circle"></i> YouTube URL terdeteksi — video akan di-embed otomatis
                     </div>
                     @endif
                 </div>
@@ -113,7 +113,7 @@
 
             {{-- Pertemuan --}}
             <div class="card">
-                <div class="section-title" style="margin-bottom:1.25rem;">📅 Pertemuan</div>
+                <div class="section-title" style="margin-bottom:1.25rem;"><i class="fas fa-calendar-alt text-teal-600"></i> Pertemuan</div>
 
                 <div style="margin-bottom:1rem;">
                     <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.85rem; color:var(--text-primary); margin-bottom:0.75rem;">
@@ -151,7 +151,7 @@
         {{-- Right: Settings sidebar --}}
         <div style="position:sticky; top:1rem;">
             <div class="card" style="margin-bottom:1rem;">
-                <div class="section-title" style="margin-bottom:1rem;">⚙️ Pengaturan</div>
+                <div class="section-title" style="margin-bottom:1rem;"><i class="fas fa-cog"></i> Pengaturan</div>
 
                 <div style="margin-bottom:0.875rem;">
                     <label class="form-label">Estimasi Waktu (menit)</label>
@@ -173,7 +173,7 @@
             </div>
 
             <div class="card" style="background:var(--teal-dim); border-color:var(--border-teal);">
-                <div style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:0.75rem;">📚 Ringkasan:</div>
+                <div style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:0.75rem;"><i class="fas fa-book"></i> Ringkasan:</div>
                 <div style="font-size:0.82rem; color:var(--text-primary); line-height:1.7;">
                     <div>Kelas: <strong>{{ $kelas->mataKuliah->nama }}</strong></div>
                     <div>Tipe: <strong>{{ ucfirst($tipe) }}</strong></div>

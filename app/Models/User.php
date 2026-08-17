@@ -54,7 +54,7 @@ class User extends Authenticatable
     public function kelas()
     {
         return $this->belongsToMany(Kelas::class, 'kelas_mahasiswa', 'mahasiswa_id', 'kelas_id')
-            ->withPivot('enrolled_at')->withTimestamps();
+            ->withPivot('enrolled_at');
     }
 
     // Dosen: kelas yang diampu

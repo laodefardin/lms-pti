@@ -22,7 +22,7 @@ class KelasIndex extends Component
 
     public function mount()
     {
-        $activeSemester = Semester::where('is_active', true)->first();
+        $activeSemester = Semester::where('is_aktif', true)->first();
         if ($activeSemester) {
             $this->semester_id = $activeSemester->id;
         } else {

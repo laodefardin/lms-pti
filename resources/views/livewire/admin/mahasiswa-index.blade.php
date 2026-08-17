@@ -1,7 +1,7 @@
 <div class="fade-in">
     <div class="flex justify-between items-center mb-6">
         <div>
-            <h1 class="section-title">Manajemen Mahasiswa 👨‍🎓</h1>
+            <h1 class="section-title">Manajemen Mahasiswa</h1>
             <p class="section-sub">Kelola data mahasiswa, angkatan, dan status aktif.</p>
         </div>
         <button wire:click="openCreate" class="btn btn-primary">

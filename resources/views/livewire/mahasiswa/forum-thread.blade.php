@@ -49,7 +49,7 @@
                                         <span class="badge badge-teal">Pembuat Thread</span>
                                     @endif
                                     @if($reply->is_solution)
-                                        <span class="badge badge-green">✅ Solusi</span>
+                                        <span class="badge badge-green"><i class="fas fa-check-circle"></i> Solusi</span>
                                     @endif
                                 </div>
                                 <div style="color: var(--text-secondary); font-size: 0.875rem;">

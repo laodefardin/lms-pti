@@ -1,6 +1,6 @@
 <div class="fade-in">
     <div class="section-header" style="margin-bottom: 2rem;">
-        <h1 class="section-title">Profil Saya 👤</h1>
+        <h1 class="section-title">Profil Saya</h1>
         <p class="section-sub" style="color: var(--text-secondary);">Kelola informasi profil dan pengaturan akun Anda.</p>
     </div>
 
@@ -57,7 +57,7 @@
                 <div style="margin-top: 1.5rem; text-align: left;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                         <strong style="color: var(--text-primary);">Total Poin</strong>
-                        <span class="badge badge-orange">{{ $user->gamifikasiPoin()->sum('jumlah_poin') ?? 0 }} pts</span>
+                        <span class="badge badge-orange">{{ $user->gamifikasiPoin()->sum('poin') ?? 0 }} pts</span>
                     </div>
                     <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
                         <span class="badge badge-purple">Pemula</span>
@@ -156,7 +156,7 @@
 
             <!-- Stats Section -->
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
-                <div class="card" style="background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: white; border: none;">
+                <div class="card" style="background: #14a7a0; color: white; border: none;">
                     <div style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">{{ $stats['kelas_count'] }}</div>
                     <div style="opacity: 0.9;">Mata Kuliah Diikuti</div>
                 </div>

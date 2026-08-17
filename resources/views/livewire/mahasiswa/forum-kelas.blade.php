@@ -72,7 +72,7 @@
                         
                         <div style="display: flex; gap: 1.5rem; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem;">
                             <span style="color: var(--text-secondary); font-size: 0.875rem; display: flex; align-items: center; gap: 0.25rem;">
-                                💬 {{ $thread->replies_count }} Balasan
+                                <i class="fas fa-comments"></i> {{ $thread->replies_count }} Balasan
                             </span>
                             <span style="color: var(--text-secondary); font-size: 0.875rem; display: flex; align-items: center; gap: 0.25rem;">
                                 👁 {{ $thread->views }} Dilihat

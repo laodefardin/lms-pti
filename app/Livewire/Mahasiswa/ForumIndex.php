@@ -24,7 +24,7 @@ class ForumIndex extends Component
                 });
             })
             ->with(['mataKuliah', 'dosen'])
-            ->withCount(['forumThreads'])
+            ->withCount(['forumThread'])
             ->get();
 
         return view('livewire.mahasiswa.forum-index', [

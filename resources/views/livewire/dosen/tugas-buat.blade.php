@@ -7,7 +7,7 @@
     <div style="display:grid; grid-template-columns:1fr 320px; gap:1.25rem; align-items:start;">
         <div>
             <div class="card" style="margin-bottom:1.25rem;">
-                <div class="section-title" style="margin-bottom:1.25rem;">📝 Detail Tugas</div>
+                <div class="section-title" style="margin-bottom:1.25rem;"><i class="fas fa-edit"></i> Detail Tugas</div>
 
                 <div style="margin-bottom:1rem;">
                     <label class="form-label">Judul Tugas *</label>
@@ -39,14 +39,14 @@
             </div>
 
             <div class="card">
-                <div class="section-title" style="margin-bottom:1rem;">📤 Pengaturan Pengumpulan</div>
+                <div class="section-title" style="margin-bottom:1rem;"><i class="fas fa-upload"></i> Pengaturan Pengumpulan</div>
                 <div style="margin-bottom:1rem;">
                     <label class="form-label">Tipe Pengumpulan</label>
                     <div style="display:flex; gap:0.5rem;">
-                        @foreach(['upload'=>'📁 Upload File','link'=>'🔗 Link URL','keduanya'=>'📁🔗 Keduanya'] as $val => $label)
+                        @foreach(['upload'=>'<i class="fas fa-upload"></i> Upload File','link'=>'<i class="fas fa-link"></i> Link URL','keduanya'=>'<i class="fas fa-upload"></i><i class="fas fa-link"></i> Keduanya'] as $val => $label)
                         <button type="button" wire:click="$set('tipe','{{ $val }}')"
                                 style="flex:1; padding:0.5rem; border-radius:8px; border:1.5px solid {{ $tipe === $val ? 'var(--teal)' : 'var(--border)' }}; background:{{ $tipe === $val ? 'var(--teal-dim)' : 'var(--input-bg)' }}; cursor:pointer; font-size:0.78rem; font-weight:600; color:{{ $tipe === $val ? 'var(--teal)' : 'var(--text-secondary)' }};">
-                            {{ $label }}
+                            {!! $label !!}
                         </button>
                         @endforeach
                     </div>
@@ -76,7 +76,7 @@
         {{-- Right sidebar --}}
         <div style="position:sticky; top:1rem;">
             <div class="card" style="margin-bottom:1rem;">
-                <div class="section-title" style="margin-bottom:1rem;">⚙️ Pengaturan</div>
+                <div class="section-title" style="margin-bottom:1rem;"><i class="fas fa-cog"></i> Pengaturan</div>
 
                 <div style="margin-bottom:1rem;">
                     <label class="form-label">Deadline *</label>

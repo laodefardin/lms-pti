@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $title ?? 'Admin' }} — LMS PTI Unsulbar</title>
+    <title>{{ $title ?? 'Admin' }} — LMS Pendidikan Teknologi Informasi Unsulbar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+    <script>
+        (function() {
+            var saved = localStorage.getItem('lms-theme');
+            var isDark = saved !== null ? saved === 'dark' : true;
+            document.documentElement.classList.add(isDark ? 'dark' : 'light');
+        })();
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 <div class="lms-layout">
@@ -18,7 +26,7 @@
                 </svg>
             </div>
             <div>
-                <div class="sidebar-logo-text">LMS PTI</div>
+                <div class="sidebar-logo-text">LMS Pendidikan Teknologi Informasi</div>
                 <div class="sidebar-logo-sub" style="color:#a78bfa;">Administrator</div>
             </div>
         </div>
@@ -27,35 +35,35 @@
             <div class="sidebar-section-label">Manajemen</div>
             @php
             $nav = [
-                ['route'=>'admin.dashboard',      'label'=>'Dashboard',     'path'=>'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
-                ['route'=>'admin.mahasiswa.index','label'=>'Mahasiswa',     'path'=>'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'],
-                ['route'=>'admin.dosen.index',    'label'=>'Dosen',         'path'=>'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'],
-                ['route'=>'admin.semester.index', 'label'=>'Semester',      'path'=>'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
-                ['route'=>'admin.mata-kuliah.index','label'=>'Matakuliah',  'path'=>'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'],
-                ['route'=>'admin.kelas.index',    'label'=>'Kelas',         'path'=>'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'],
+                ['route'=>'admin.dashboard',      'label'=>'Dashboard',     'icon'=>'fas fa-home'],
+                ['route'=>'admin.mahasiswa.index','label'=>'Mahasiswa',     'icon'=>'fas fa-user-graduate'],
+                ['route'=>'admin.dosen.index',    'label'=>'Dosen',         'icon'=>'fas fa-chalkboard-teacher'],
+                ['route'=>'admin.semester.index', 'label'=>'Semester',      'icon'=>'fas fa-calendar-alt'],
+                ['route'=>'admin.mata-kuliah.index','label'=>'Matakuliah',  'icon'=>'fas fa-book'],
+                ['route'=>'admin.kelas.index',    'label'=>'Kelas',         'icon'=>'fas fa-users-cog'],
             ];
             $nav2 = [
-                ['route'=>'admin.kalender.index',   'label'=>'Kalender',    'path'=>'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
-                ['route'=>'admin.pengumuman.index', 'label'=>'Pengumuman',  'path'=>'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z'],
-                ['route'=>'admin.laporan.index',    'label'=>'Laporan',     'path'=>'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'],
-                ['route'=>'admin.pengaturan.index', 'label'=>'Pengaturan',  'path'=>'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z'],
-                ['route'=>'admin.audit-log',        'label'=>'Audit Log',   'path'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
+                ['route'=>'admin.kalender.index',   'label'=>'Kalender',    'icon'=>'fas fa-calendar-day'],
+                ['route'=>'admin.pengumuman.index', 'label'=>'Pengumuman',  'icon'=>'fas fa-bullhorn'],
+                ['route'=>'admin.laporan.index',    'label'=>'Laporan',     'icon'=>'fas fa-chart-line'],
+                ['route'=>'admin.pengaturan.index', 'label'=>'Pengaturan',  'icon'=>'fas fa-cog'],
+                ['route'=>'admin.audit-log',        'label'=>'Audit Log',   'icon'=>'fas fa-history'],
             ];
             @endphp
 
             @foreach($nav as $item)
-            <a href="{{ route($item['route']) }}" class="nav-item {{ request()->routeIs($item['route'].'*') ? 'active' : '' }}"
+            <a href="{{ route($item['route']) }}" wire:navigate class="nav-item {{ request()->routeIs($item['route'].'*') ? 'active' : '' }}"
                style="{{ request()->routeIs($item['route'].'*') ? 'background:rgba(139,92,246,0.15); color:#a78bfa;' : '' }}">
-                <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['path'] }}"/></svg>
+                <i class="{{ $item['icon'] }} nav-icon" style="font-size: 1.1rem; width: 1.5rem; text-align: center;"></i>
                 {{ $item['label'] }}
             </a>
             @endforeach
 
             <div class="sidebar-section-label" style="margin-top:0.5rem;">Sistem</div>
             @foreach($nav2 as $item)
-            <a href="{{ route($item['route']) }}" class="nav-item {{ request()->routeIs($item['route'].'*') ? 'active' : '' }}"
+            <a href="{{ route($item['route']) }}" wire:navigate class="nav-item {{ request()->routeIs($item['route'].'*') ? 'active' : '' }}"
                style="{{ request()->routeIs($item['route'].'*') ? 'background:rgba(139,92,246,0.15); color:#a78bfa;' : '' }}">
-                <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['path'] }}"/></svg>
+                <i class="{{ $item['icon'] }} nav-icon" style="font-size: 1.1rem; width: 1.5rem; text-align: center;"></i>
                 {{ $item['label'] }}
             </a>
             @endforeach
@@ -68,11 +76,43 @@
                 <div class="sidebar-user-role" style="color:#a78bfa;">Administrator</div>
             </div>
             <div x-show="open" x-transition @click.outside="open=false"
-                 style="position:absolute; bottom:70px; left:12px; right:12px; background:#252840; border:1px solid rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; z-index:100;">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" style="width:100%; display:flex; align-items:center; gap:0.6rem; padding:0.7rem 1rem; font-size:0.8rem; color:#f87171; background:none; border:none; cursor:pointer; text-align:left;">🚪 Keluar</button>
-                </form>
+                 style="position:absolute; bottom:70px; left:12px; width:250px; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; z-index:100; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
+                
+                <div style="padding: 1rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--border);">
+                    <div style="position: relative;">
+                        <img src="{{ auth()->user()->foto_url }}" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--border);">
+                        <div style="position: absolute; top: -2px; right: -2px; background: #3b82f6; color: white; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-size: 0.5rem; border: 2px solid var(--bg-card);">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ auth()->user()->name }}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ auth()->user()->email }}</div>
+                    </div>
+                </div>
+                
+                <div style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                    <a href="{{ route('admin.pengaturan.index') }}" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1.25rem; font-size: 0.85rem; color: var(--text-primary); text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='var(--input-bg)'" onmouseout="this.style.background='transparent'">
+                        <i class="fas fa-user-cog" style="width: 1rem; text-align: center; color: var(--text-secondary);"></i> Pengaturan Profil
+                    </a>
+                    <a href="#" style="display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 1.25rem; font-size: 0.85rem; color: var(--text-primary); text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='var(--input-bg)'" onmouseout="this.style.background='transparent'">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <i class="far fa-bell" style="width: 1rem; text-align: center; color: var(--text-secondary);"></i> Notifikasi
+                        </div>
+                        @if(auth()->user()->unreadNotifications()->count() > 0)
+                            <span style="background: #ef4444; color: white; font-size: 0.65rem; font-weight: bold; padding: 0.1rem 0.4rem; border-radius: 99px;">{{ auth()->user()->unreadNotifications()->count() }}</span>
+                        @endif
+                    </a>
+                </div>
+                
+                <div style="padding: 0.5rem 0;">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" style="width: 100%; display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1.25rem; font-size: 0.85rem; color: #ef4444; background: none; border: none; cursor: pointer; text-align: left; transition: background 0.2s; font-weight: 500;" onmouseover="this.style.background='rgba(239,68,68,0.08)'" onmouseout="this.style.background='transparent'">
+                            <i class="fas fa-sign-out-alt" style="width: 1rem; text-align: center;"></i> Keluar
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </aside>
@@ -84,7 +124,7 @@
                 <livewire:notification-center />
                 @include('components.theme-toggle')
                 <div style="display:flex; align-items:center; gap:0.4rem; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.25); border-radius:99px; padding:0.28rem 0.7rem;">
-                    <span style="font-size:0.85rem;">⚙️</span>
+                    <span style="font-size:0.85rem;"><i class="fas fa-cog"></i></span>
                     <span style="font-size:0.75rem; font-weight:600; color:#a78bfa;">Admin</span>
                 </div>
             </div>

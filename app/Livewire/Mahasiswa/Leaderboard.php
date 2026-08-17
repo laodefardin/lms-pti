@@ -19,8 +19,8 @@ class Leaderboard extends Component
         $query = User::role('mahasiswa');
         
         if ($this->filter === 'kelas_saya') {
-            $kelasIds = $user->mahasiswaKelas()->pluck('kelas_id');
-            $query->whereHas('mahasiswaKelas', function($q) use ($kelasIds) {
+            $kelasIds = $user->kelas()->pluck('kelas_id');
+            $query->whereHas('kelas', function($q) use ($kelasIds) {
                 $q->whereIn('kelas_id', $kelasIds);
             });
         }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lupa Password — LMS PTI Unsulbar</title>
+    <title>Lupa Password — LMS Pendidikan Teknologi Informasi Unsulbar</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         .auth-bg {
@@ -28,7 +28,7 @@
         .auth-input { width:100%; background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.75rem 0.75rem 0.75rem 2.75rem; color:#f0f4f8; font-size:0.9rem; font-family:'Inter',sans-serif; transition:all 0.2s; outline:none; }
         .auth-input:focus { border-color:#14a7a0; background:rgba(20,167,160,0.05); box-shadow:0 0 0 3px rgba(20,167,160,0.1); }
         .auth-input::placeholder { color:#5a6478; }
-        .auth-btn { width:100%; background:linear-gradient(135deg,#14a7a0,#0e8a84); color:white; font-weight:700; font-size:0.95rem; padding:0.85rem; border-radius:12px; border:none; cursor:pointer; transition:all 0.25s; box-shadow:0 6px 20px rgba(20,167,160,0.4); font-family:'Inter',sans-serif; }
+        .auth-btn { width:100%; background:#14a7a0; color:white; font-weight:700; font-size:0.95rem; padding:0.85rem; border-radius:12px; border:none; cursor:pointer; transition:all 0.25s; box-shadow:0 6px 20px rgba(20,167,160,0.4); font-family:'Inter',sans-serif; }
         .auth-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(20,167,160,0.55); }
         .input-group { position:relative; }
         .input-icon { position:absolute; left:0.875rem; top:50%; transform:translateY(-50%); color:#5a6478; pointer-events:none; }
@@ -53,7 +53,7 @@
         </div>
 
         @if (session('status'))
-            <div class="alert-success">✅ {{ session('status') }}</div>
+            <div class="alert-success"><i class="fas fa-check-circle"></i> {{ session('status') }}</div>
         @endif
 
         <form method="POST" action="{{ route('password.email') }}">

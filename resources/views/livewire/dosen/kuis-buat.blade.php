@@ -10,7 +10,7 @@
         <div>
             {{-- Info Kuis --}}
             <div class="card" style="margin-bottom:1.25rem;">
-                <div class="section-title" style="margin-bottom:1.25rem;">⚡ Info Kuis</div>
+                <div class="section-title" style="margin-bottom:1.25rem;"><i class="fas fa-bolt text-yellow-500"></i> Info Kuis</div>
 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.875rem; margin-bottom:1rem;">
                     <div style="grid-column:1/-1;">
@@ -64,7 +64,7 @@
             <div class="card">
                 <div class="section-header" style="margin-bottom:1rem;">
                     <div>
-                        <div class="section-title">📋 Bank Soal</div>
+                        <div class="section-title"><i class="fas fa-clipboard-list"></i> Bank Soal</div>
                         <div class="section-sub">{{ count($soalList) }} soal ditambahkan</div>
                     </div>
                     <button wire:click="addSoal" class="btn btn-primary btn-sm" {{ $showSoalForm ? 'disabled style=opacity:0.5' : '' }}>
@@ -135,14 +135,14 @@
                     </div>
                     @else
                     <div style="padding:0.75rem; background:var(--input-bg); border-radius:8px; font-size:0.78rem; color:var(--text-muted); margin-bottom:0.875rem;">
-                        💡 Soal esai perlu dinilai manual oleh dosen
+                        <i class="fas fa-lightbulb"></i> Soal esai perlu dinilai manual oleh dosen
                     </div>
                     @endif
 
                     <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
                         <button type="button" wire:click="batalSoal" class="btn btn-ghost btn-sm">Batal</button>
                         <button type="button" wire:click="simpanSoal" class="btn btn-primary btn-sm">
-                            <span wire:loading.remove wire:target="simpanSoal">✅ Simpan Soal</span>
+                            <span wire:loading.remove wire:target="simpanSoal"><i class="fas fa-check-circle"></i> Simpan Soal</span>
                             <span wire:loading wire:target="simpanSoal">Menyimpan...</span>
                         </button>
                     </div>
@@ -173,7 +173,7 @@
                 @empty
                 @if(!$showSoalForm)
                 <div style="text-align:center; padding:2.5rem; color:var(--text-muted);">
-                    <div style="font-size:2rem; margin-bottom:0.5rem;">📋</div>
+                    <div style="font-size:2rem; margin-bottom:0.5rem;"><i class="fas fa-clipboard-list" style="color:var(--text-muted);"></i></div>
                     <div style="font-size:0.875rem;">Belum ada soal. Klik "Tambah Soal" untuk mulai.</div>
                 </div>
                 @endif
@@ -191,7 +191,7 @@
         {{-- RIGHT: Settings --}}
         <div style="position:sticky; top:1rem;">
             <div class="card" style="margin-bottom:1rem; background:var(--teal-dim); border-color:var(--border-teal);">
-                <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:0.875rem;">📊 Ringkasan Kuis</div>
+                <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:0.875rem;"><i class="fas fa-chart-bar"></i> Ringkasan Kuis</div>
                 <div style="font-size:0.82rem; color:var(--text-primary); line-height:2;">
                     <div>Soal: <strong>{{ count($soalList) }}</strong></div>
                     <div>Durasi: <strong>{{ $durasiMenit }} menit</strong></div>

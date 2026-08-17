@@ -64,7 +64,7 @@ class ImportService
 
                             // Assign ke kelas jika diminta
                             if ($this->kelasId) {
-                                $user->mahasiswaKelas()->syncWithoutDetaching([$this->kelasId]);
+                                $user->kelas()->syncWithoutDetaching([$this->kelasId]);
                             }
 
                             $this->result['success']++;

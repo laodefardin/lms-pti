@@ -20,7 +20,7 @@ class LaporanIndex extends Component
 
     public function render()
     {
-        $activeSemester = Semester::where('is_active', true)->first();
+        $activeSemester = Semester::where('is_aktif', true)->first();
         $semester_id = $activeSemester ? $activeSemester->id : null;
 
         // Stat: Total Kelas Aktif
@@ -55,7 +55,7 @@ class LaporanIndex extends Component
 
         // Rata-rata kelas list
         $kelasStats = Kelas::with('mataKuliah')->where('semester_id', $semester_id)->get()->map(function($k) {
-            $rataNilai = NilaiAkhir::where('kelas_id', $k->id)->avg('nilai_total');
+            $rataNilai = NilaiAkhir::where('kelas_id', $k->id)->avg('nilai_akhir');
             return [
                 'nama' => $k->mataKuliah ? $k->mataKuliah->nama_mata_kuliah . ' - ' . $k->nama_kelas : $k->nama_kelas,
                 'rata_nilai' => $rataNilai ? round($rataNilai, 2) : '-',

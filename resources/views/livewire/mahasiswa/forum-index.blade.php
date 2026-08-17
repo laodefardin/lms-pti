@@ -1,7 +1,7 @@
 <div class="fade-in">
     <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
         <div>
-            <h1 class="section-title">Forum Diskusi 💬</h1>
+            <h1 class="section-title">Forum Diskusi</h1>
             <p class="section-sub" style="color: var(--text-secondary);">Diskusikan materi dan tugas dengan dosen dan teman sekelas.</p>
         </div>
         <div style="width: 300px;">

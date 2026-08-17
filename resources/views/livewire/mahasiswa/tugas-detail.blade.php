@@ -1,120 +1,120 @@
 <div class="fade-in">
     <!-- Breadcrumb -->
-    <div class="text-sm mb-4" style="color: var(--text-muted);">
-        <a href="{{ route('mahasiswa.tugas') ?? '#' }}" class="hover:underline" style="color: var(--teal);">Tugas</a> > {{ $tugas->judul }}
+    <div style="font-size: 0.875rem; margin-bottom: 1rem; color: var(--text-muted);">
+        <a href="{{ route('mahasiswa.tugas') ?? '#' }}" style="color: var(--teal); text-decoration: none;">Tugas</a> > {{ $tugas->judul }}
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
         <!-- Task Description (LEFT) -->
-        <div class="lg:col-span-2">
-            <div class="card p-6" style="background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 0.5rem; box-shadow: var(--shadow-card);">
-                <div class="mb-4">
-                    <span class="badge badge-teal" style="background-color: var(--teal-light); color: var(--teal-dark); padding: 0.25rem 0.5rem; border-radius: 9999px; font-size: 0.75rem;">{{ $tugas->kelas->mataKuliah->nama_mk }}</span>
+        <div style="grid-column: span 2;">
+            <div class="card" style="padding: 1.5rem;">
+                <div style="margin-bottom: 1rem;">
+                    <span class="badge badge-teal">{{ $tugas->kelas->mataKuliah->nama ?? '' }}</span>
                 </div>
-                <h1 class="text-2xl font-bold mb-4" style="color: var(--text-primary);">{{ $tugas->judul }}</h1>
+                <h1 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem; color: var(--text-primary);">{{ $tugas->judul }}</h1>
                 
-                <div class="flex items-center text-sm mb-6 p-4 rounded-md" style="background-color: #f8fafc; border: 1px solid var(--border);">
-                    <div class="flex-1">
-                        <p style="color: var(--text-muted);">Batas Waktu</p>
-                        <p class="font-semibold" style="color: var(--text-primary);">{{ \Carbon\Carbon::parse($tugas->batas_waktu)->format('d M Y, H:i') }}</p>
+                <div style="display: flex; align-items: center; font-size: 0.875rem; margin-bottom: 1.5rem; padding: 1rem; border-radius: 0.375rem; background-color: var(--input-bg); border: 1px solid var(--border);">
+                    <div style="flex: 1;">
+                        <p style="color: var(--text-muted); margin: 0;">Batas Waktu</p>
+                        <p style="font-weight: 600; margin: 0; color: var(--text-primary);">{{ \Carbon\Carbon::parse($tugas->deadline)->format('d M Y, H:i') }}</p>
                     </div>
                     @if($tugas->file_soal)
                     <div>
-                        <a href="{{ Storage::url($tugas->file_soal) }}" target="_blank" class="btn btn-outline btn-sm rounded-md px-3 py-1" style="border: 1px solid var(--teal); color: var(--teal); text-decoration: none;">Download Soal</a>
+                        <a href="{{ Storage::url($tugas->file_soal) }}" target="_blank" class="btn btn-outline btn-sm">Download Soal</a>
                     </div>
                     @endif
                 </div>
 
-                <div class="prose max-w-none" style="color: var(--text-secondary);">
+                <div style="color: var(--text-secondary); line-height: 1.6;">
                     {!! $tugas->deskripsi !!}
                 </div>
             </div>
         </div>
 
         <!-- Submission Form (RIGHT) -->
-        <div class="lg:col-span-1">
-            <div class="card p-6" style="background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 0.5rem; box-shadow: var(--shadow-card);">
-                <h2 class="text-xl font-bold mb-4 border-b pb-2" style="color: var(--text-primary); border-color: var(--border);">Status Pengumpulan</h2>
+        <div>
+            <div class="card" style="padding: 1.5rem;">
+                <h2 style="font-size: 1.25rem; font-weight: bold; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); color: var(--text-primary);">Status Pengumpulan</h2>
 
                 @if($showSuccess)
-                    <div class="mb-4 p-3 rounded-md text-sm" style="background-color: #dcfce7; color: var(--success); border: 1px solid #bbf7d0;">
+                    <div style="margin-bottom: 1rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; background-color: rgba(34, 197, 94, 0.1); color: var(--success); border: 1px solid var(--success);">
                         Tugas berhasil dikumpulkan!
                     </div>
                 @endif
 
                 @php
-                    $isPassed = \Carbon\Carbon::parse($tugas->batas_waktu)->isPast();
+                    $isPassed = \Carbon\Carbon::parse($tugas->deadline)->isPast();
                 @endphp
 
                 @if($pengumpulan)
-                    <div class="mb-4">
-                        <p class="text-sm" style="color: var(--text-muted);">Status</p>
+                    <div style="margin-bottom: 1rem;">
+                        <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0 0 0.25rem 0;">Status</p>
                         @if($pengumpulan->status === 'dinilai')
-                            <span class="badge badge-green" style="background-color: #dcfce7; color: var(--success); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">Dinilai ({{ $pengumpulan->nilai }}/100)</span>
+                            <span class="badge badge-green">Dinilai ({{ $pengumpulan->nilai }}/100)</span>
                         @else
-                            <span class="badge badge-teal" style="background-color: var(--teal-light); color: var(--teal-dark); padding: 0.25rem 0.5rem; border-radius: 0.25rem;">Dikumpulkan</span>
+                            <span class="badge badge-teal">Dikumpulkan</span>
                         @endif
                     </div>
-                    <div class="mb-4">
-                        <p class="text-sm" style="color: var(--text-muted);">Waktu Pengumpulan</p>
-                        <p class="font-medium" style="color: var(--text-primary);">{{ \Carbon\Carbon::parse($pengumpulan->waktu_pengumpulan)->format('d M Y, H:i') }}</p>
+                    <div style="margin-bottom: 1rem;">
+                        <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0 0 0.25rem 0;">Waktu Pengumpulan</p>
+                        <p style="font-weight: 500; margin: 0; color: var(--text-primary);">{{ \Carbon\Carbon::parse($pengumpulan->waktu_pengumpulan)->format('d M Y, H:i') }}</p>
                     </div>
                     
                     @if($pengumpulan->file_path)
-                        <div class="mb-4">
-                            <p class="text-sm" style="color: var(--text-muted);">File Terlampir</p>
-                            <a href="{{ Storage::url($pengumpulan->file_path) }}" target="_blank" class="text-sm hover:underline" style="color: var(--teal);">Lihat File</a>
+                        <div style="margin-bottom: 1rem;">
+                            <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0 0 0.25rem 0;">File Terlampir</p>
+                            <a href="{{ Storage::url($pengumpulan->file_path) }}" target="_blank" style="font-size: 0.875rem; color: var(--teal); text-decoration: none;">Lihat File</a>
                         </div>
                     @endif
 
                     @if($pengumpulan->link_url)
-                        <div class="mb-4">
-                            <p class="text-sm" style="color: var(--text-muted);">Link Tautan</p>
-                            <a href="{{ $pengumpulan->link_url }}" target="_blank" class="text-sm hover:underline" style="color: var(--teal);">{{ $pengumpulan->link_url }}</a>
+                        <div style="margin-bottom: 1rem;">
+                            <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0 0 0.25rem 0;">Link Tautan</p>
+                            <a href="{{ $pengumpulan->link_url }}" target="_blank" style="font-size: 0.875rem; color: var(--teal); text-decoration: none; word-break: break-all;">{{ $pengumpulan->link_url }}</a>
                         </div>
                     @endif
                     
                     @if($pengumpulan->catatan_dosen)
-                        <div class="mt-6 p-4 rounded-md" style="background-color: #f0fdfa; border: 1px solid var(--teal-light);">
-                            <p class="text-sm font-semibold mb-1" style="color: var(--teal-dark);">Feedback Dosen:</p>
-                            <p class="text-sm" style="color: var(--text-secondary);">{{ $pengumpulan->catatan_dosen }}</p>
+                        <div style="margin-top: 1.5rem; padding: 1rem; border-radius: 0.375rem; background-color: var(--teal-light); border: 1px solid var(--border-teal);">
+                            <p style="font-size: 0.875rem; font-weight: 600; margin: 0 0 0.25rem 0; color: var(--teal-dark);">Feedback Dosen:</p>
+                            <p style="font-size: 0.875rem; margin: 0; color: var(--teal-dark);">{{ $pengumpulan->catatan_dosen }}</p>
                         </div>
                     @endif
                     
                     @if($pengumpulan->status !== 'dinilai' && !$isPassed)
-                        <hr class="my-6" style="border-color: var(--border);">
-                        <p class="text-sm mb-3 font-semibold" style="color: var(--text-primary);">Update Pengumpulan</p>
+                        <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+                        <p style="font-size: 0.875rem; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-primary);">Update Pengumpulan</p>
                     @endif
                 @endif
 
                 @if(!$pengumpulan && $isPassed)
-                    <div class="p-4 rounded-md text-center" style="background-color: #fee2e2; border: 1px solid #fecaca;">
-                        <p class="font-semibold" style="color: var(--danger);">Batas Waktu Telah Lewat</p>
-                        <p class="text-sm mt-1" style="color: var(--danger);">Anda tidak dapat lagi mengumpulkan tugas ini.</p>
+                    <div style="padding: 1rem; border-radius: 0.375rem; text-align: center; background-color: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger);">
+                        <p style="font-weight: 600; margin: 0; color: var(--danger);">Batas Waktu Telah Lewat</p>
+                        <p style="font-size: 0.875rem; margin: 0.25rem 0 0 0; color: var(--danger);">Anda tidak dapat lagi mengumpulkan tugas ini.</p>
                     </div>
                 @elseif(!$pengumpulan || ($pengumpulan && $pengumpulan->status !== 'dinilai' && !$isPassed))
-                    <form wire:submit.prevent="kumpulkan" class="space-y-4">
-                        @error('general') <span class="text-xs" style="color: var(--danger);">{{ $message }}</span> @enderror
+                    <form wire:submit.prevent="kumpulkan" style="display: flex; flex-direction: column; gap: 1rem;">
+                        @error('general') <span style="font-size: 0.75rem; color: var(--danger);">{{ $message }}</span> @enderror
                         
                         <div>
-                            <label class="block text-sm font-medium mb-1" style="color: var(--text-primary);">Upload File</label>
-                            <input type="file" wire:model="fileUpload" class="w-full text-sm p-2 rounded-md" style="border: 1px solid var(--border); background-color: var(--bg-main);">
-                            @error('fileUpload') <span class="text-xs" style="color: var(--danger);">{{ $message }}</span> @enderror
+                            <label class="form-label" style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem; color: var(--text-primary);">Upload File</label>
+                            <input type="file" wire:model="fileUpload" class="form-input" style="width: 100%; box-sizing: border-box;">
+                            @error('fileUpload') <span style="font-size: 0.75rem; color: var(--danger);">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-1" style="color: var(--text-primary);">Tautan (Link)</label>
-                            <input type="url" wire:model="linkUrl" placeholder="https://..." class="w-full text-sm p-2 rounded-md" style="border: 1px solid var(--border); background-color: var(--bg-main); color: var(--text-primary);">
-                            @error('linkUrl') <span class="text-xs" style="color: var(--danger);">{{ $message }}</span> @enderror
+                            <label class="form-label" style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem; color: var(--text-primary);">Tautan (Link)</label>
+                            <input type="url" wire:model="linkUrl" placeholder="https://..." class="form-input" style="width: 100%; box-sizing: border-box;">
+                            @error('linkUrl') <span style="font-size: 0.75rem; color: var(--danger);">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium mb-1" style="color: var(--text-primary);">Catatan</label>
-                            <textarea wire:model="catatan" rows="3" class="w-full text-sm p-2 rounded-md" style="border: 1px solid var(--border); background-color: var(--bg-main); color: var(--text-primary);"></textarea>
-                            @error('catatan') <span class="text-xs" style="color: var(--danger);">{{ $message }}</span> @enderror
+                            <label class="form-label" style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem; color: var(--text-primary);">Catatan</label>
+                            <textarea wire:model="catatan" rows="3" class="form-input" style="width: 100%; box-sizing: border-box;"></textarea>
+                            @error('catatan') <span style="font-size: 0.75rem; color: var(--danger);">{{ $message }}</span> @enderror
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-full w-full py-2 rounded-md text-white font-medium flex justify-center items-center" style="background-color: var(--teal); transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9';" onmouseout="this.style.opacity='1';">
+                        <button type="submit" class="btn btn-primary btn-full" style="display: flex; justify-content: center; align-items: center; width: 100%;">
                             <span wire:loading.remove wire:target="kumpulkan">Kumpulkan Tugas</span>
                             <span wire:loading wire:target="kumpulkan">Mengirim...</span>
                         </button>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $konten->judul ?? 'Materi' }} — {{ $kelas->mataKuliah->nama ?? 'LMS PTI' }}</title>
+    <title>{{ $konten->judul ?? 'Materi' }} — {{ $kelas->mataKuliah->nama ?? 'LMS Pendidikan Teknologi Informasi' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
     <style>
@@ -33,6 +33,7 @@
         .prose-lms th, .prose-lms td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; font-size: 0.875rem; }
         .prose-lms th { background: var(--input-bg); font-weight: 600; }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
@@ -60,12 +61,12 @@
         {{-- Center: prev / next nav --}}
         <div style="display:flex; align-items:center; gap:0.5rem; flex-shrink:0;">
             @if($sebelumnya)
-            <a href="{{ route('mahasiswa.materi.viewer', [$kelas, $sebelumnya]) }}" class="btn btn-ghost btn-sm" title="Materi sebelumnya">
+            <a href="{{ route('mahasiswa.materi.viewer', [$kelas->slug, $sebelumnya]) }}" class="btn btn-ghost btn-sm" title="Materi sebelumnya">
                 <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg> Prev
             </a>
             @endif
             @if($berikutnya)
-            <a href="{{ route('mahasiswa.materi.viewer', [$kelas, $berikutnya]) }}" class="btn btn-primary btn-sm" title="Materi berikutnya">
+            <a href="{{ route('mahasiswa.materi.viewer', [$kelas->slug, $berikutnya]) }}" class="btn btn-primary btn-sm" title="Materi berikutnya">
                 Next <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
             </a>
             @endif
@@ -128,7 +129,7 @@
 
                     <div x-show="open" x-transition style="padding:0.1rem 0 0.25rem 0.75rem;">
                         @foreach($pertemuan->konten->where('is_published', true) as $k)
-                        <a href="{{ route('mahasiswa.materi.viewer', [$kelas, $k]) }}"
+                        <a href="{{ route('mahasiswa.materi.viewer', [$kelas->slug, $k]) }}"
                            class="viewer-item {{ $k->id === $konten->id ? 'active' : '' }}"
                            style="{{ $k->id === $konten->id ? '' : '' }}">
                             <div class="viewer-item-icon {{ in_array($k->id, $selesaiIds) ? 'done' : '' }}">
@@ -159,10 +160,10 @@
                         <span style="font-size:1.1rem;">{{ $konten->ikon }}</span>
                         <span class="badge badge-gray">{{ ucfirst($konten->tipe) }}</span>
                         @if($konten->estimasi_menit)
-                        <span class="badge badge-gray">⏱ {{ $konten->estimasi_menit }} mnt</span>
+                        <span class="badge badge-gray"><i class="fas fa-clock"></i> {{ $konten->estimasi_menit }} mnt</span>
                         @endif
                         @if($isSelesai)
-                        <span class="badge badge-green">✅ Selesai</span>
+                        <span class="badge badge-green"><i class="fas fa-check-circle"></i> Selesai</span>
                         @endif
                     </div>
                     <h1 style="font-size:1.5rem; font-weight:800; color:var(--text-primary); line-height:1.3; margin-bottom:0.5rem;">{{ $konten->judul }}</h1>
@@ -241,7 +242,7 @@
                 {{-- Deskripsi tambahan --}}
                 @if($konten->konten && !in_array($konten->tipe, ['artikel','kode']))
                 <div class="card" style="margin-bottom:1.5rem;">
-                    <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.75rem;">📋 Keterangan</div>
+                    <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.75rem;"><i class="fas fa-clipboard-list"></i> Keterangan</div>
                     <div class="prose-lms" style="font-size:0.875rem;">{!! nl2br(e($konten->konten)) !!}</div>
                 </div>
                 @endif
@@ -250,7 +251,7 @@
                 <div style="padding:1.25rem; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
                     <div>
                         @if($isSelesai)
-                        <div style="color:var(--success); font-weight:600; font-size:0.9rem;">✅ Kamu sudah menyelesaikan materi ini</div>
+                        <div style="color:var(--success); font-weight:600; font-size:0.9rem;"><i class="fas fa-check-circle"></i> Kamu sudah menyelesaikan materi ini</div>
                         <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">Progress tersimpan otomatis</div>
                         @else
                         <div style="color:var(--text-primary); font-weight:600; font-size:0.9rem;">Sudah selesai membaca?</div>
@@ -266,7 +267,7 @@
                         </button>
                         @endif
                         @if($berikutnya)
-                        <a href="{{ route('mahasiswa.materi.viewer', [$kelas, $berikutnya]) }}" class="btn btn-outline">
+                        <a href="{{ route('mahasiswa.materi.viewer', [$kelas->slug, $berikutnya]) }}" class="btn btn-outline">
                             Materi Berikutnya →
                         </a>
                         @endif
@@ -280,7 +281,7 @@
              style="background:var(--bg-sidebar); border-left:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; transition:width 0.3s ease, min-width 0.3s ease;">
 
             <div style="padding:0.875rem; border-bottom:1px solid var(--border); flex-shrink:0;">
-                <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">📝 Catatan Saya</div>
+                <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;"><i class="fas fa-edit"></i> Catatan Saya</div>
             </div>
 
             <div style="flex:1; padding:0.875rem; display:flex; flex-direction:column; overflow-y:auto;">
@@ -296,7 +297,7 @@
 
                 @if($saved)
                 <div style="text-align:center; font-size:0.72rem; color:var(--success); margin-top:0.5rem;" x-data x-init="setTimeout(() => $el.remove(), 3000)">
-                    ✅ Catatan tersimpan!
+                    <i class="fas fa-check-circle"></i> Catatan tersimpan!
                 </div>
                 @endif
 
@@ -305,9 +306,9 @@
                     <div style="font-size:0.75rem; color:var(--text-secondary); line-height:1.7;">
                         <div>📁 Tipe: <span style="color:var(--text-primary); font-weight:500;">{{ ucfirst($konten->tipe) }}</span></div>
                         @if($konten->estimasi_menit)
-                        <div>⏱ Estimasi: <span style="color:var(--text-primary); font-weight:500;">{{ $konten->estimasi_menit }} menit</span></div>
+                        <div><i class="fas fa-clock"></i> Estimasi: <span style="color:var(--text-primary); font-weight:500;">{{ $konten->estimasi_menit }} menit</span></div>
                         @endif
-                        <div>📅 Pertemuan: <span style="color:var(--text-primary); font-weight:500;">{{ $konten->pertemuan->nomor ?? '-' }}</span></div>
+                        <div><i class="fas fa-calendar-alt"></i> Pertemuan: <span style="color:var(--text-primary); font-weight:500;">{{ $konten->pertemuan->nomor ?? '-' }}</span></div>
                     </div>
                 </div>
             </div>

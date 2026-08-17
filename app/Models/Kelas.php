@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 
 class Kelas extends Model
 {
@@ -20,6 +21,18 @@ class Kelas extends Model
         'jam_mulai'  => 'string',
         'jam_selesai'=> 'string',
     ];
+
+    // ─── Route Binding via slug ──────────────────────────────────────────
+    public function getRouteKeyName(): string
+    {
+        return 'id'; // tetap ID, tapi kita custom resolve di route
+    }
+
+    /** Slug dari nama matakuliah + nama kelas */
+    public function getSlugAttribute(): string
+    {
+        return Str::slug(($this->mataKuliah->nama ?? '') . '-' . ($this->nama_kelas ?? ''));
+    }
 
     // ─── Relations ──────────────────────────────────────────────────────
     public function mataKuliah()  { return $this->belongsTo(MataKuliah::class, 'mata_kuliah_id'); }

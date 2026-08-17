@@ -19,8 +19,15 @@ class MateriViewer extends Component
     public string $catatan    = '';
     public bool $saved        = false;
 
-    public function mount(Kelas $kelas, KontenMateri $konten)
+    public function mount(string $slug, KontenMateri $konten)
     {
+        // Resolve kelas dari slug atau ID
+        $kelas = \App\Models\Kelas::with('mataKuliah')
+            ->get()
+            ->first(fn($k) => $k->slug === $slug || (string) $k->id === $slug);
+
+        abort_if(!$kelas, 404);
+
         abort_unless(
             $kelas->mahasiswa()->where('mahasiswa_id', Auth::id())->exists(),
             403
