@@ -14,9 +14,9 @@
         @keyframes float { 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-20px) scale(1.05);} }
         .auth-card { width:100%; max-width:440px; background:rgba(26,29,39,0.85); backdrop-filter:blur(24px); border:1px solid rgba(255,255,255,0.08); border-radius:24px; padding:2.5rem; position:relative; z-index:1; box-shadow:0 40px 80px rgba(0,0,0,0.5); }
         .auth-input { width:100%; background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.1); border-radius:12px; padding:0.75rem 0.75rem 0.75rem 2.75rem; color:#f0f4f8; font-size:0.9rem; font-family:'Inter',sans-serif; transition:all 0.2s; outline:none; }
-        .auth-input:focus { border-color:#14a7a0; background:rgba(20,167,160,0.05); box-shadow:0 0 0 3px rgba(20,167,160,0.1); }
+        .auth-input:focus { border-color:#004b93; background:rgba(0,75,147,0.05); box-shadow:0 0 0 3px rgba(0,75,147,0.1); }
         .auth-input::placeholder { color:#5a6478; }
-        .auth-btn { width:100%; background:#14a7a0; color:white; font-weight:700; font-size:0.95rem; padding:0.85rem; border-radius:12px; border:none; cursor:pointer; transition:all 0.25s; box-shadow:0 6px 20px rgba(20,167,160,0.4); font-family:'Inter',sans-serif; }
+        .auth-btn { width:100%; background:#004b93; color:white; font-weight:700; font-size:0.95rem; padding:0.85rem; border-radius:12px; border:none; cursor:pointer; transition:all 0.25s; box-shadow:0 6px 20px rgba(0,75,147,0.4); font-family:'Inter',sans-serif; }
         .auth-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(20,167,160,0.55); }
         .input-group { position:relative; }
         .input-icon { position:absolute; left:0.875rem; top:50%; transform:translateY(-50%); color:#5a6478; pointer-events:none; }
@@ -31,7 +31,7 @@
 
     <div class="auth-card fade-in">
         <div style="text-align:center; margin-bottom:2rem;">
-            <div style="width:56px; height:56px; background:#14a7a0; border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; box-shadow:0 8px 24px rgba(20,167,160,0.45);">
+            <div style="width:56px; height:56px; background:#004b93; border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; box-shadow:0 8px 24px rgba(0,75,147,0.45);">
                 <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                 </svg>

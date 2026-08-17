@@ -23,20 +23,12 @@
 
         {{-- Logo --}}
         <div class="sidebar-logo">
-            <div class="sidebar-logo-icon">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                </svg>
-            </div>
-            <div>
-                <div class="sidebar-logo-text">LMS Pendidikan Teknologi Informasi</div>
-                <div class="sidebar-logo-sub">Unsulbar</div>
-            </div>
+            <img src="{{ asset('images/logo-lms.png') }}" alt="Logo LMS PTI" style="width: 100%; height: auto; object-fit: contain;">
         </div>
 
         {{-- Nav Items --}}
         <nav class="sidebar-nav">
-            <div class="sidebar-section-label">Menu Utama</div>
+            <div class="sidebar-section-label" style="color: rgba(255,255,255,0.4); text-transform: uppercase; font-size: 0.7rem; font-weight: 700; padding-left: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.05em;">Menu Utama</div>
 
             @php
             $nav = [
@@ -62,7 +54,7 @@
             </a>
         @endforeach
 
-        <div class="sidebar-section-label" style="margin-top:0.5rem;">Komunitas</div>
+        <div class="sidebar-section-label" style="margin-top:1rem; color: rgba(255,255,255,0.4); text-transform: uppercase; font-size: 0.7rem; font-weight: 700; padding-left: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.05em;">Komunitas</div>
 
         @foreach($nav2 as $item)
             <a href="{{ route($item['route']) }}" wire:navigate
@@ -86,7 +78,7 @@
 
             {{-- Dropdown --}}
             <div x-show="open" x-transition @click.outside="open=false"
-                 style="position:absolute; bottom:70px; left:12px; width:250px; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; z-index:100; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
+                 style="display:none; position:absolute; bottom:100%; left:5px; width:250px; margin-bottom:0.5rem; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; z-index:100; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
                 
                 <div style="padding: 1rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--border);">
                     <div style="position: relative;">
@@ -127,23 +119,34 @@
         </div>
     </aside>
 
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" onclick="document.getElementById('sidebar').classList.remove('open'); this.classList.add('hidden');" class="hidden md:hidden" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:40;"></div>
+
     {{-- ════════════════════════════ MAIN ════════════════════════════ --}}
     <div class="main-content">
 
         {{-- Topbar --}}
-        <header class="topbar">
+        <header class="topbar" style="height: 70px;">
             <div style="display:flex; align-items:center; gap:1rem;">
-                <button onclick="document.getElementById('sidebar').classList.toggle('open')"
-                        style="display:none; background:none; border:none; cursor:pointer; color:#8b95a8; padding:0.25rem;" class="md:hidden">
+                <button onclick="document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebar-overlay').classList.toggle('hidden');"
+                        style="background:none; border:none; cursor:pointer; color:#8b95a8; padding:0.25rem;" class="md:hidden">
                     <i class="fas fa-bars"></i>
                 </button>
-                <span class="topbar-title">{{ $title ?? 'Dashboard' }}</span>
+            </div>
+
+            <div style="flex:1; max-width:400px; margin:0 2rem; position:relative;" class="hidden md:block">
+                <i class="fas fa-search" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+                <input type="text" placeholder="Cari mata kuliah, materi, tugas..." style="width:100%; border:1px solid var(--border); border-radius:99px; padding:0.6rem 1rem 0.6rem 2.5rem; font-size:0.875rem; outline:none; background:var(--bg-card); color:var(--text-primary); transition:box-shadow 0.2s;" onfocus="this.style.boxShadow='0 0 0 3px rgba(0,75,147,0.1)'" onblur="this.style.boxShadow='none'">
             </div>
 
             <div class="topbar-actions">
-                {{-- User Name --}}
-                <div style="display:flex; align-items:center; margin-right:0.5rem;">
-                    <span style="font-size:0.85rem; font-weight:600; color:var(--text-primary);">{{ auth()->user()->name }}</span>
+                {{-- User Info (Right Side) --}}
+                <div style="display:flex; align-items:center; gap:0.5rem; background:var(--bg-card); padding:0.25rem; border-radius:99px; border:1px solid var(--border); cursor:pointer;">
+                    <img src="{{ auth()->user()->foto_url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                    <div style="padding-right:0.5rem; display:flex; flex-direction:column; justify-content:center;">
+                        <span style="font-size:0.75rem; font-weight:700; color:var(--text-primary); line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px;">{{ auth()->user()->name }}</span>
+                        <span style="font-size:0.65rem; color:var(--text-secondary); line-height:1.2;">Mahasiswa</span>
+                    </div>
                 </div>
 
                 {{-- Poin Gamifikasi --}}

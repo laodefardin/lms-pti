@@ -41,7 +41,7 @@ class User extends Authenticatable
     {
         return $this->foto
             ? asset('storage/' . $this->foto)
-            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=14a7a0&background=e6f7f6';
+            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=004b93&background=e8f2fc';
     }
 
     // ─── Relationships ───────────────────────────────────────

@@ -8,10 +8,13 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         .gradient-text {
-            color: #14a7a0; /* text-teal-600 */
+            color: #004b93; /* deep blue in light mode */
+        }
+        .dark .gradient-text {
+            color: #fcb900; /* golden yellow in dark mode */
         }
         .dot-grid {
-            background-image: radial-gradient(rgba(20, 167, 160, 0.15) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(0, 75, 147, 0.15) 1px, transparent 1px);
             background-size: 28px 28px;
         }
         .dark .dot-grid {
@@ -33,16 +36,10 @@
     {{-- ── Navbar ───────────────────────────────────────────────── --}}
     <nav class="fixed w-full z-50 top-0 bg-white/80 dark:bg-[#0f1117]/80 backdrop-blur-md border-b border-gray-200 dark:border-white/10" x-data="{ open: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
+            <div class="flex items-center justify-between py-2 md:py-3">
                 {{-- Logo --}}
                 <a href="/" class="flex items-center gap-3 text-decoration-none hover:opacity-90 transition">
-                    <div class="w-9 h-9 rounded-lg bg-teal-600 flex items-center justify-center shadow-[0_4px_12px_rgba(20,167,160,0.4)]">
-                        <i class="fas fa-graduation-cap text-white text-lg"></i>
-                    </div>
-                    <div>
-                        <div class="text-sm font-bold leading-tight text-gray-900 dark:text-[#f0f4f8]">LMS Pendidikan Teknologi Informasi</div>
-                        <div class="text-[0.62rem] text-gray-500 dark:text-[#8b95a8]">Unsulbar</div>
-                    </div>
+                    <img src="{{ asset('images/logo-landing.png') }}" alt="Logo LMS PTI" class="h-16 md:h-24 lg:h-32 w-auto object-contain">
                 </a>
 
                 {{-- Desktop Nav Links --}}
@@ -55,7 +52,7 @@
                     
                     <div class="flex items-center gap-3">
                         @include('components.theme-toggle')
-                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-teal-600 hover:bg-teal-700 shadow-[0_4px_14px_rgba(20,167,160,0.4)] transition-all hover:-translate-y-0.5">
+                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-[#004b93] hover:bg-[#003770] shadow-[0_4px_14px_rgba(0,75,147,0.4)] transition-all hover:-translate-y-0.5">
                             <i class="fas fa-sign-in-alt mr-2"></i>
                             Masuk
                         </a>
@@ -85,14 +82,14 @@
     </nav>
 
     {{-- ── Hero Section ─────────────────────────────────────────── --}}
-    <section class="dot-grid pt-28 pb-16 md:pt-36 md:pb-24 overflow-hidden relative">
+    <section class="dot-grid pt-32 pb-16 md:pt-44 md:pb-24 overflow-hidden relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 {{-- Left Content --}}
                 <div class="fade-in max-w-2xl">
-                    <div class="inline-flex items-center gap-2 bg-teal-50 dark:bg-teal-500/10 border border-teal-200 dark:border-teal-500/20 rounded-full px-3 py-1.5 mb-6">
-                        <span class="w-1.5 h-1.5 bg-teal-500 rounded-full"></span>
-                        <span class="text-xs font-semibold text-teal-700 dark:text-teal-400 tracking-wide uppercase">Platform Belajar Digital</span>
+                    <div class="inline-flex items-center gap-2 bg-[#004b93]/5 dark:bg-[#004b93]/20 border border-[#004b93]/20 dark:border-[#004b93]/30 rounded-full px-3 py-1.5 mb-6">
+                        <span class="w-2 h-2 bg-[#fcb900] rounded-full shadow-[0_0_8px_rgba(252,185,0,0.6)]"></span>
+                        <span class="text-xs font-bold text-[#004b93] dark:text-[#3b8df0] tracking-wide uppercase">Platform Belajar Digital</span>
                     </div>
 
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight mb-5 text-gray-900 dark:text-white">
@@ -105,7 +102,7 @@
                     </p>
 
                     <div class="flex flex-wrap gap-4">
-                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-6 py-3.5 text-base font-bold text-white rounded-xl bg-teal-600 hover:bg-teal-700 shadow-[0_8px_24px_rgba(20,167,160,0.4)] transition-all hover:-translate-y-1">
+                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-6 py-3.5 text-base font-bold text-white rounded-xl bg-[#004b93] hover:bg-[#003770] shadow-[0_8px_24px_rgba(0,75,147,0.4)] transition-all hover:-translate-y-1">
                             <i class="fas fa-sign-in-alt mr-2"></i>
                             Masuk Sekarang
                         </a>
@@ -137,7 +134,7 @@
                         </div>
 
                         <div class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center">
-                            Selamat Datang, Ahmad <i class="fas fa-hand-sparkles text-yellow-400 ml-2"></i>
+                            Selamat Datang, Fardin <i class="fas fa-hand-sparkles text-yellow-400 ml-2"></i>
                         </div>
 
                         {{-- Stat mini cards --}}
@@ -187,26 +184,26 @@
     </section>
 
     {{-- ── Features Section ─────────────────────────────────────── --}}
-    <section id="fitur" class="py-24 bg-gray-50 dark:bg-[#0f1117] relative">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(20,167,160,0.05)_0%,_transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,_rgba(20,167,160,0.05)_0%,_transparent_70%)]"></div>
+    <section id="fitur" class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(0,75,147,0.05)_0%,_transparent_70%)] dark:bg-[radial-gradient(ellipse_at_center,_rgba(0,75,147,0.05)_0%,_transparent_70%)]"></div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center max-w-2xl mx-auto mb-16 fade-in">
-                <div class="inline-block bg-teal-50 dark:bg-teal-500/10 border border-teal-200 dark:border-teal-500/20 rounded-full px-4 py-1.5 text-xs font-bold text-teal-700 dark:text-teal-400 tracking-wide uppercase mb-4">FITUR UNGGULAN</div>
+                <div class="inline-block bg-[#004b93]/5 dark:bg-[#004b93]/10 border border-[#004b93]/20 dark:border-[#004b93]/20 rounded-full px-4 py-1.5 text-xs font-bold text-[#004b93] dark:text-[#3b8df0] tracking-wide uppercase mb-4">FITUR UNGGULAN</div>
                 <h2 class="text-3xl sm:text-4xl font-black mb-4 text-gray-900 dark:text-white">Semua yang kamu butuhkan <span class="gradient-text">dalam satu platform</span></h2>
                 <p class="text-lg text-gray-600 dark:text-[#8b95a8] leading-relaxed">Dirancang khusus untuk kebutuhan perkuliahan Program Studi Pendidikan Teknologi Informasi, bukan platform kursus umum.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach([
-                    ['fas fa-video','Materi Interaktif','Video kuliah, PDF, artikel, dan live code editor untuk pemrograman.','from-teal-400 to-teal-600','text-teal-600 dark:text-teal-400'],
-                    ['fas fa-tasks','Tugas Online','Upload tugas, pantau deadline, dan lihat feedback dosen langsung.','from-blue-400 to-blue-600','text-blue-600 dark:text-blue-400'],
-                    ['fas fa-bolt','Kuis & Ujian','Kuis dengan timer otomatis, soal diacak, dan nilai langsung muncul.','from-purple-400 to-purple-600','text-purple-600 dark:text-purple-400'],
-                    ['fas fa-chart-bar','Pantau Nilai','Nilai semua komponen: tugas, kuis, UTS, UAS, dan kehadiran.','from-amber-400 to-amber-600','text-amber-600 dark:text-amber-400'],
-                    ['fas fa-comments','Forum Diskusi','Diskusi per matakuliah dan jalur khusus Tanya Dosen.','from-pink-400 to-pink-600','text-pink-600 dark:text-pink-400'],
-                    ['fas fa-trophy','Gamifikasi','Poin, badge, dan leaderboard untuk motivasi belajar.','from-teal-400 to-teal-600','text-teal-600 dark:text-teal-400'],
+                    ['fas fa-video','Materi Interaktif','Video kuliah, PDF, artikel, dan live code editor untuk pemrograman.','from-blue-400 to-blue-600','text-[#004b93] dark:text-blue-400'],
+                    ['fas fa-tasks','Tugas Online','Upload tugas, pantau deadline, dan lihat feedback dosen langsung.','from-blue-400 to-blue-600','text-[#004b93] dark:text-blue-400'],
+                    ['fas fa-bolt','Kuis & Ujian','Kuis dengan timer otomatis, soal diacak, dan nilai langsung muncul.','from-blue-400 to-blue-600','text-[#004b93] dark:text-blue-400'],
+                    ['fas fa-chart-bar','Pantau Nilai','Nilai semua komponen: tugas, kuis, UTS, UAS, dan kehadiran.','from-blue-400 to-blue-600','text-[#004b93] dark:text-blue-400'],
+                    ['fas fa-comments','Forum Diskusi','Diskusi per matakuliah dan jalur khusus Tanya Dosen.','from-blue-400 to-blue-600','text-[#004b93] dark:text-blue-400'],
+                    ['fas fa-trophy','Gamifikasi','Poin, badge, dan leaderboard untuk motivasi belajar.','from-blue-400 to-blue-600','text-[#004b93] dark:text-blue-400'],
                 ] as [$icon, $title, $desc, $gradient, $textColor])
-                <div class="bg-white dark:bg-[#1a1d27]/70 backdrop-blur-sm border border-gray-100 dark:border-white/5 rounded-2xl p-6 hover:-translate-y-2 hover:border-teal-300 dark:hover:border-teal-500/30 hover:shadow-xl hover:shadow-teal-900/5 transition-all duration-300 fade-in group">
+                <div class="bg-white dark:bg-[#1a1d27]/70 backdrop-blur-sm border border-gray-100 dark:border-white/5 rounded-2xl p-6 hover:-translate-y-2 hover:border-[#004b93]/30 dark:hover:border-[#004b93]/30 hover:shadow-xl hover:shadow-[#004b93]/5 transition-all duration-300 fade-in group">
                     <div class="w-14 h-14 bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">
                         <i class="{{ $icon }} {{ $textColor }}"></i>
                     </div>
@@ -230,8 +227,8 @@
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 @foreach([['fas fa-graduation-cap','Pendidikan Berkualitas'],['fas fa-laptop-code','Fokus Teknologi'],['fas fa-map-marker-alt','Sulawesi Barat'],['fas fa-globe','Berbasis Digital']] as [$icon, $label])
-                <div class="bg-teal-50 dark:bg-teal-500/5 border border-teal-100 dark:border-teal-500/10 rounded-xl p-6 hover:bg-teal-100 dark:hover:bg-teal-500/10 transition-colors">
-                    <div class="text-3xl text-teal-600 dark:text-teal-400 mb-3"><i class="{{ $icon }}"></i></div>
+                <div class="bg-[#004b93]/5 dark:bg-[#004b93]/10 border border-[#004b93]/10 dark:border-[#004b93]/10 rounded-xl p-6 hover:bg-[#004b93]/10 dark:hover:bg-[#004b93]/20 transition-colors">
+                    <div class="text-3xl text-[#004b93] dark:text-blue-400 mb-3"><i class="{{ $icon }}"></i></div>
                     <div class="text-sm font-bold text-gray-800 dark:text-[#f0f4f8]">{{ $label }}</div>
                 </div>
                 @endforeach
@@ -241,12 +238,11 @@
 
     {{-- ── CTA Section ─────────────────────────────────────────────── --}}
     <section id="kontak" class="py-24 px-4">
-        <div class="max-w-3xl mx-auto bg-gradient-to-br from-teal-50 to-indigo-50 dark:from-teal-900/20 dark:to-indigo-900/20 border border-teal-100 dark:border-teal-500/20 rounded-3xl p-10 md:p-16 text-center fade-in shadow-xl">
-            <div class="text-5xl mb-6"><i class="fas fa-rocket text-teal-500"></i></div>
-            <h2 class="text-3xl md:text-4xl font-black mb-4 text-gray-900 dark:text-white">Siap Mulai Belajar?</h2>
-            <p class="text-lg text-gray-600 dark:text-[#8b95a8] mb-8 max-w-xl mx-auto">Masuk dengan akun yang diberikan oleh Program Studi dan mulai perjalanan belajarmu hari ini.</p>
-            <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white rounded-xl bg-teal-600 hover:bg-teal-700 shadow-[0_8px_24px_rgba(20,167,160,0.4)] transition-all hover:-translate-y-1">
-                Masuk ke LMS <i class="fas fa-arrow-right ml-3"></i>
+        <div class="relative z-10 max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#004b93]/5 to-indigo-50 dark:from-[#004b93]/20 dark:to-indigo-900/20 border border-[#004b93]/20 dark:border-[#004b93]/20 rounded-3xl p-10 md:p-16 text-center fade-in shadow-xl">
+            <h2 class="text-3xl md:text-4xl font-black mb-6 text-gray-900 dark:text-white">Siap Untuk Memulai Pembelajaran?</h2>
+            <p class="text-lg text-gray-600 dark:text-[#8b95a8] mb-10 max-w-2xl mx-auto">Bergabunglah dengan ribuan mahasiswa lainnya dan rasakan pengalaman belajar yang lebih interaktif dan modern.</p>
+            <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white rounded-xl bg-[#004b93] hover:bg-[#003770] shadow-[0_8px_24px_rgba(0,75,147,0.4)] transition-all hover:-translate-y-1">
+                Akses LMS Sekarang <i class="fas fa-arrow-right ml-3"></i>
             </a>
         </div>
     </section>

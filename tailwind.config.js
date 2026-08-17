@@ -15,6 +15,21 @@ export default {
             fontFamily: {
                 sans: ['Geist', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                teal: {
+                    50: '#f0f8ff',
+                    100: '#e0f0fe',
+                    200: '#bae0fd',
+                    300: '#7dc5fb',
+                    400: 'var(--teal-light)',
+                    500: 'var(--teal)',
+                    600: 'var(--teal)',
+                    700: 'var(--teal-dark)',
+                    800: '#002f5e',
+                    900: '#001e3b',
+                    950: '#001328',
+                }
+            }
         },
     },
 

@@ -21,19 +21,11 @@
     {{-- SIDEBAR --}}
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-logo">
-            <div class="sidebar-logo-icon">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
-                </svg>
-            </div>
-            <div>
-                <div class="sidebar-logo-text">LMS Pendidikan Teknologi Informasi</div>
-                <div class="sidebar-logo-sub">Portal Dosen</div>
-            </div>
+            <img src="{{ asset('images/logo-lms.png') }}" alt="Logo LMS PTI" style="width: 100%; height: auto; object-fit: contain;">
         </div>
-
+        {{-- Nav Items --}}
         <nav class="sidebar-nav">
-            <div class="sidebar-section-label">Menu Dosen</div>
+            <div class="sidebar-section-label" style="color: rgba(255,255,255,0.4); text-transform: uppercase; font-size: 0.7rem; font-weight: 700; padding-left: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.05em;">Menu Utama</div>
             @php
             $nav = [
                 ['route'=>'dosen.dashboard',       'label'=>'Dashboard',    'icon'=>'fas fa-home'],
@@ -52,7 +44,7 @@
             </a>
             @endforeach
 
-            <div class="sidebar-section-label" style="margin-top:0.5rem;">Akun</div>
+            <div class="sidebar-section-label" style="margin-top:1rem; color: rgba(255,255,255,0.4); text-transform: uppercase; font-size: 0.7rem; font-weight: 700; padding-left: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.05em;">Komunitas</div>
             @foreach($nav2 as $item)
             <a href="{{ route($item['route']) }}" wire:navigate class="nav-item {{ request()->routeIs($item['route']) ? 'active' : '' }}">
                 <i class="{{ $item['icon'] }} nav-icon" style="font-size: 1.1rem; width: 1.5rem; text-align: center;"></i>
@@ -65,10 +57,11 @@
             <img src="{{ auth()->user()->foto_url }}" alt="Avatar" class="sidebar-avatar">
             <div style="flex:1; min-width:0;">
                 <div class="sidebar-user-name" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ auth()->user()->name }}</div>
-                <div class="sidebar-user-role" style="color:#14a7a0;">Dosen</div>
+                <div class="sidebar-user-role" style="color:var(--teal);">Dosen</div>
             </div>
+            {{-- Dropdown --}}
             <div x-show="open" x-transition @click.outside="open=false"
-                 style="position:absolute; bottom:70px; left:12px; width:250px; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; z-index:100; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
+                 style="display:none; position:absolute; bottom:100%; left:5px; width:250px; margin-bottom:0.5rem; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; z-index:100; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
                 
                 <div style="padding: 1rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--border);">
                     <div style="position: relative;">
@@ -109,17 +102,39 @@
         </div>
     </aside>
 
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" onclick="document.getElementById('sidebar').classList.remove('open'); this.classList.add('hidden');" class="hidden md:hidden" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); z-index:40;"></div>
+
     {{-- MAIN --}}
     <div class="main-content">
-        <header class="topbar">
-            <span class="topbar-title">{{ $title ?? 'Dashboard' }}</span>
+        <header class="topbar" style="height: 70px;">
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <button onclick="document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebar-overlay').classList.toggle('hidden');"
+                        style="background:none; border:none; cursor:pointer; color:#8b95a8; padding:0.25rem;" class="md:hidden">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <div style="flex:1; max-width:400px; margin:0 2rem; position:relative;" class="hidden md:block">
+                <i class="fas fa-search" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+                <input type="text" placeholder="Cari mata kuliah, materi, tugas..." style="width:100%; border:1px solid var(--border); border-radius:99px; padding:0.6rem 1rem 0.6rem 2.5rem; font-size:0.875rem; outline:none; background:var(--bg-card); color:var(--text-primary); transition:box-shadow 0.2s;" onfocus="this.style.boxShadow='0 0 0 3px rgba(0,75,147,0.1)'" onblur="this.style.boxShadow='none'">
+            </div>
+
             <div class="topbar-actions">
-                <livewire:notification-center />
-                @include('components.theme-toggle')
-                <div style="display:flex; align-items:center; gap:0.4rem; background:var(--teal-dim); border:1px solid var(--border-teal); border-radius:99px; padding:0.28rem 0.7rem;">
-                    <span style="font-size:0.85rem;"><i class="fas fa-chalkboard-teacher"></i></span>
-                    <span style="font-size:0.75rem; font-weight:600; color:var(--teal);">Dosen</span>
+                {{-- User Info (Right Side) --}}
+                <div style="display:flex; align-items:center; gap:0.5rem; background:var(--bg-card); padding:0.25rem; border-radius:99px; border:1px solid var(--border); cursor:pointer;">
+                    <img src="{{ auth()->user()->foto_url }}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+                    <div style="padding-right:0.5rem; display:flex; flex-direction:column; justify-content:center;">
+                        <span style="font-size:0.75rem; font-weight:700; color:var(--text-primary); line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px;">{{ auth()->user()->name }}</span>
+                        <span style="font-size:0.65rem; color:var(--text-secondary); line-height:1.2;">Dosen</span>
+                    </div>
                 </div>
+
+                {{-- Theme Toggle --}}
+                @include('components.theme-toggle')
+
+                {{-- Notifikasi --}}
+                <livewire:notification-center />
             </div>
         </header>
         <main class="page-content">{{ $slot }}</main>
