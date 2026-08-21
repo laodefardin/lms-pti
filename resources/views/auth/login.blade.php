@@ -234,10 +234,10 @@
 
                 {{-- SSO Buttons --}}
                 <div class="grid grid-cols-2 gap-4 relative z-10">
-                    <button type="button" class="flex items-center justify-center gap-2 bg-white dark:bg-[#151821] border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 shadow-sm transition-colors cursor-not-allowed opacity-80" title="Belum tersedia">
-                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5">
+                    <a href="{{ route('google.redirect') }}" class="flex items-center justify-center gap-2 bg-white dark:bg-[#151821] border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-[#4285f4] hover:shadow-md rounded-xl py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 shadow-sm transition-all duration-200 group">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5 group-hover:scale-110 transition-transform">
                         Google
-                    </button>
+                    </a>
                     <button type="button" class="flex items-center justify-center gap-2 bg-white dark:bg-[#151821] border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl py-3 text-sm font-semibold text-gray-700 dark:text-gray-300 shadow-sm transition-colors cursor-not-allowed opacity-80" title="Belum tersedia">
                         <svg class="w-5 h-5" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
                             <path fill="#f35325" d="M1 1h9v9H1z"/>

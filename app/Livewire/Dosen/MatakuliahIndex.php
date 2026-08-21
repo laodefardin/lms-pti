@@ -10,6 +10,32 @@ use Livewire\Attributes\Layout;
 class MatakuliahIndex extends Component
 {
     public $search = '';
+    public $hapusId = null;
+
+    public function konfirmasiHapus($id)
+    {
+        $this->hapusId = $id;
+    }
+
+    public function batalHapus()
+    {
+        $this->hapusId = null;
+    }
+
+    public function hapusKelas()
+    {
+        $kelas = Kelas::where('id', $this->hapusId)
+                      ->where('dosen_id', auth()->id())
+                      ->first();
+
+        if ($kelas) {
+            $nama = $kelas->nama_kelas;
+            $kelas->delete();
+            session()->flash('success', 'Kelas "' . $nama . '" berhasil dihapus.');
+        }
+
+        $this->hapusId = null;
+    }
 
     public function render()
     {

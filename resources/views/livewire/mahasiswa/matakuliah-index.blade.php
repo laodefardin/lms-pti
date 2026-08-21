@@ -26,52 +26,73 @@
     @else
     <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:1.25rem;">
         @foreach($kelasList as $item)
-        @php $kelas = $item['kelas']; $persen = $item['persen']; @endphp
-        <div class="course-card slide-in-left">
-            {{-- Thumbnail --}}
-            <div style="position:relative;">
-                <div class="course-thumbnail-placeholder" style="background:linear-gradient(135deg, {{ ['#0e8a84','#0e6e8a','#5b0e8a','#8a570e','#1b5e20'][($loop->index % 5) ] }}, {{ ['#14a7a0','#148ea7','#7c14a7','#a78a14','#2e7d32'][$loop->index % 5] }});">
-                    <span style="font-size:2.5rem;">{!! ['<i class="fas fa-laptop-code"></i>','<i class="fas fa-globe"></i>','<i class="fas fa-server"></i>','<i class="fas fa-lock"></i>','<i class="fas fa-mobile-alt"></i>'][$loop->index % 5] !!}</span>
-                </div>
-                {{-- Progress overlay badge --}}
-                <div style="position:absolute; top:0.75rem; right:0.75rem;">
-                    @if($persen === 100)
-                        <span class="badge badge-green"><i class="fas fa-check-circle"></i> Selesai</span>
-                    @elseif($persen > 0)
-                        <span class="badge badge-teal">{{ $persen }}% selesai</span>
-                    @else
-                        <span class="badge badge-gray">Belum dimulai</span>
-                    @endif
+        @php 
+            $kelas = $item['kelas']; 
+            $persen = $item['persen']; 
+            $gradients = [
+                ['from' => '#f59e0b', 'to' => '#d97706', 'icon' => 'fa-book-open'],
+                ['from' => '#06b6d4', 'to' => '#0891b2', 'icon' => 'fa-globe'],
+                ['from' => '#ec4899', 'to' => '#db2777', 'icon' => 'fa-brain'],
+                ['from' => '#1a75d1', 'to' => '#0d559e', 'icon' => 'fa-laptop-code'],
+                ['from' => '#8b5cf6', 'to' => '#6d28d9', 'icon' => 'fa-flask'],
+                ['from' => '#10b981', 'to' => '#059669', 'icon' => 'fa-chart-bar'],
+                ['from' => '#ef4444', 'to' => '#dc2626', 'icon' => 'fa-pen-nib'],
+                ['from' => '#f97316', 'to' => '#ea580c', 'icon' => 'fa-calculator'],
+            ];
+            $g = $gradients[$kelas->id % count($gradients)];
+        @endphp
+        <div class="card h-full flex flex-col hover:-translate-y-1 transition-transform" style="padding:0; overflow:hidden; border:none; box-shadow:0 4px 15px rgba(0,0,0,0.05); display:flex; flex-direction:column;">
+            {{-- Thumbnail / Banner --}}
+            <div style="height:140px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, {{ $g['from'] }}, {{ $g['to'] }});">
+                {{-- Decorative circles --}}
+                <div style="position:absolute; width:120px; height:120px; border-radius:50%; background:rgba(255,255,255,0.08); top:-30px; right:-30px;"></div>
+                <div style="position:absolute; width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,0.08); bottom:-20px; left:-20px;"></div>
+
+                {{-- Floating icon --}}
+                <i class="fas {{ $g['icon'] }}" style="position:absolute; font-size:5rem; color:rgba(255,255,255,0.15); bottom:-8px; right:8px; transform:rotate(-10deg);"></i>
+
+                {{-- Badges --}}
+                <span style="position:absolute; top:0.75rem; right:0.75rem; background:rgba(255,255,255,0.2); backdrop-filter:blur(4px); padding:0.25rem 0.75rem; border-radius:99px; color:#fff; font-size:0.7rem; font-weight:700; border:1px solid rgba(255,255,255,0.3);">
+                    {{ $kelas->mataKuliah->sks ?? 0 }} SKS
+                </span>
+                
+                {{-- Course Info inside Banner --}}
+                <div style="position:absolute; bottom:0.75rem; left:1rem; right:1rem;">
+                    <h3 style="color:#fff; font-weight:800; font-size:1.1rem; margin-bottom:0.25rem; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; text-shadow:0 1px 3px rgba(0,0,0,0.3); line-height:1.3;">
+                        {{ $kelas->mataKuliah->nama ?? 'Unknown MK' }}
+                    </h3>
+                    <p style="color:rgba(255,255,255,0.8); font-size:0.75rem; margin:0;">
+                        {{ $kelas->semester->nama ?? 'Semester Aktif' }}
+                    </p>
                 </div>
             </div>
 
-            <div class="course-body">
-                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.6rem;">
-                    <span class="badge badge-teal">{{ $kelas->mataKuliah->sks }} SKS</span>
-                    <span class="badge badge-gray">{{ $kelas->mataKuliah->kode }}</span>
+            <div style="padding:1.25rem; flex:1; display:flex; flex-direction:column; background:var(--bg-card);">
+                {{-- Kode & Kelas --}}
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
+                    <span style="font-size:0.875rem; font-weight:700; color:var(--text-secondary);">{{ $kelas->mataKuliah->kode ?? '-' }}</span>
+                    <span style="background:rgba(59,130,246,0.1); color:#3b82f6; padding:0.25rem 0.6rem; border-radius:99px; font-size:0.7rem; font-weight:700;">Kelas {{ $kelas->nama_kelas }}</span>
                 </div>
 
-                <div class="course-title" style="font-size:1rem; color:var(--text-primary); margin-bottom:0.35rem;">{{ $kelas->mataKuliah->nama }}</div>
-                <div class="course-teacher" style="color:var(--text-secondary); margin-bottom:0.3rem;">
-                    <i class="fas fa-chalkboard-teacher"></i> {{ $kelas->dosen->name }}
+                <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.35rem;">
+                    <i class="fas fa-chalkboard-teacher" style="width:16px; text-align:center; color:var(--teal); margin-right:4px;"></i> {{ $kelas->dosen->name }}
                 </div>
-                <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:0.875rem;">
-                    <i class="fas fa-calendar-alt"></i> {{ ucfirst($kelas->hari_kuliah ?? '-') }} · {{ $kelas->jam_mulai ? \Carbon\Carbon::parse($kelas->jam_mulai)->format('H:i') : '-' }}–{{ $kelas->jam_selesai ? \Carbon\Carbon::parse($kelas->jam_selesai)->format('H:i') : '-' }}
-                    @if($kelas->ruangan) · <i class="fas fa-building"></i> {{ $kelas->ruangan }} @endif
+                <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:1.25rem;">
+                    <i class="fas fa-calendar-alt" style="width:16px; text-align:center; color:var(--teal); margin-right:4px;"></i> {{ ucfirst($kelas->hari_kuliah ?? '-') }}, {{ $kelas->jam_mulai ? \Carbon\Carbon::parse($kelas->jam_mulai)->format('H:i') : '-' }} - {{ $kelas->jam_selesai ? \Carbon\Carbon::parse($kelas->jam_selesai)->format('H:i') : '-' }}
                 </div>
 
-                {{-- Progress --}}
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.4rem;">
-                    <span style="font-size:0.72rem; color:var(--text-secondary);">Progress Materi</span>
-                    <span style="font-size:0.72rem; font-weight:700; color:var(--teal);">{{ $persen }}%</span>
+                <div style="margin-top:auto;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; font-weight:700; margin-bottom:0.4rem;">
+                        <span style="color:var(--text-primary);">Progress Belajar</span>
+                        <span style="color:{{ $persen == 100 ? '#10b981' : 'var(--teal)' }};">{{ $persen }}%</span>
+                    </div>
+                    <div style="height:6px; background:var(--input-bg); border-radius:99px; margin-bottom:1rem; overflow:hidden;">
+                        <div style="width:{{ $persen }}%; height:100%; background:{{ $persen == 100 ? '#10b981' : 'var(--teal)' }}; border-radius:99px; transition:width 0.5s;"></div>
+                    </div>
+                    <a href="{{ route('mahasiswa.matakuliah.detail', $kelas->slug) }}" style="display:block; width:100%; text-align:center; padding:0.6rem; border-radius:8px; background:var(--teal); color:#fff; font-size:0.85rem; font-weight:600; text-decoration:none; transition:background 0.2s;" onmouseover="this.style.background='var(--teal-dark)'" onmouseout="this.style.background='var(--teal)'">
+                        {{ $persen > 0 ? 'Lanjutkan Belajar →' : 'Mulai Belajar →' }}
+                    </a>
                 </div>
-                <div class="progress-wrap" style="margin-bottom:1rem;">
-                    <div class="progress-bar" style="width:{{ $persen }}%;"></div>
-                </div>
-
-                <a href="{{ route('mahasiswa.matakuliah.detail', $kelas->slug) }}" class="btn btn-primary btn-sm btn-full">
-                    {{ $persen > 0 ? 'Lanjutkan Belajar →' : 'Mulai Belajar →' }}
-                </a>
             </div>
         </div>
         @endforeach

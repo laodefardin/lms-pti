@@ -1,220 +1,234 @@
-<div class="fade-in">
-    <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.78rem; color:var(--text-secondary); margin-bottom:1.25rem;">
-        <a href="{{ route('dosen.matakuliah.detail', $kelas) }}" style="color:var(--text-secondary); text-decoration:none;" onmouseover="this.style.color='var(--teal)'" onmouseout="this.style.color='var(--text-secondary)'">{{ $kelas->mataKuliah->nama }}</a>
-        <span>/</span><span style="color:var(--text-primary);">Buat Kuis</span>
+<div class="w-full px-2 xl:px-4 space-y-5 pb-12 fade-in">
+    {{-- Header --}}
+    <div class="flex items-center justify-between mb-4">
+        <div>
+            <a href="{{ route('dosen.matakuliah.detail', ['kelas' => $kelas, 'tab' => 'kuis']) }}"
+               class="text-[var(--text-muted)] hover:text-[var(--teal)] text-sm inline-flex items-center gap-1 transition mb-2">
+                <i class="fas fa-arrow-left"></i> Kembali ke Manajemen Kuis
+            </a>
+            @if($pertemuanId)
+                @php $pt = \App\Models\Pertemuan::find($pertemuanId); @endphp
+                @if($pt)
+                    <div class="mb-2 flex items-center gap-3 px-4 py-2.5 rounded-xl border text-sm font-medium" style="background:rgba(99,102,241,0.08); border-color:rgba(99,102,241,0.3); color:#4f46e5;">
+                        <i class="fas fa-link"></i>
+                        <span>Kuis ini akan dikaitkan ke <strong>Pertemuan ke-{{ $pt->nomor }} &mdash; {{ $pt->topik ?? 'Tanpa Judul' }}</strong></span>
+                    </div>
+                @endif
+            @endif
+            <h1 class="text-2xl font-bold text-[var(--text-primary)]">Buat Kuis / Ujian Baru</h1>
+        </div>
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 320px; gap:1.25rem; align-items:start;">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        {{-- Kolom Kiri: Detail Kuis & Daftar Soal --}}
+        <div class="lg:col-span-2 space-y-6">
+            {{-- Detail Kuis --}}
+            <div class="card p-6">
+                <div class="flex items-center gap-2 mb-6 border-b border-[var(--border)] pb-3">
+                    <i class="fas fa-info-circle text-[var(--teal)] text-lg"></i>
+                    <h2 class="text-lg font-bold text-[var(--text-primary)]">Informasi Dasar</h2>
+                </div>
 
-        {{-- LEFT: Kuis info + Soal builder --}}
-        <div>
-            {{-- Info Kuis --}}
-            <div class="card" style="margin-bottom:1.25rem;">
-                <div class="section-title" style="margin-bottom:1.25rem;"><i class="fas fa-bolt text-yellow-500"></i> Info Kuis</div>
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Judul Kuis / Ujian *</label>
+                    <input wire:model="judul" type="text" class="form-input w-full" placeholder="Contoh: Kuis 1 Dasar Pemrograman">
+                    @error('judul') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
+                </div>
 
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.875rem; margin-bottom:1rem;">
-                    <div style="grid-column:1/-1;">
-                        <label class="form-label">Judul Kuis *</label>
-                        <input wire:model="judul" type="text" class="form-input" placeholder="Contoh: Kuis 1 — HTML & CSS">
-                        @error('judul') <div class="form-error">{{ $message }}</div> @enderror
-                    </div>
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Deskripsi (Opsional)</label>
+                    <textarea wire:model="deskripsi" class="form-input w-full" rows="3" placeholder="Deskripsi singkat mengenai kuis ini..."></textarea>
+                    @error('deskripsi') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-2">
                     <div>
-                        <label class="form-label">Tipe</label>
-                        <select wire:model="tipe" class="form-input">
-                            <option value="kuis">Kuis Reguler</option>
-                            <option value="uts">UTS</option>
-                            <option value="uas">UAS</option>
+                        <label class="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Tipe Evaluasi</label>
+                        <select wire:model="tipe" class="form-input w-full">
+                            <option value="kuis">Kuis Rutin</option>
+                            <option value="uts">Ujian Tengah Semester (UTS)</option>
+                            <option value="uas">Ujian Akhir Semester (UAS)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="form-label">Durasi (menit)</label>
-                        <input wire:model="durasiMenit" type="number" class="form-input" min="5" max="300">
-                        @error('durasiMenit') <div class="form-error">{{ $message }}</div> @enderror
+                        <label class="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Durasi Pengerjaan (Menit) *</label>
+                        <input wire:model="durasiMenit" type="number" min="1" max="300" class="form-input w-full">
+                        @error('durasiMenit') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
                     </div>
-                    <div>
-                        <label class="form-label">Buka Pada</label>
-                        <input wire:model="bukaAt" type="datetime-local" class="form-input">
-                    </div>
-                    <div>
-                        <label class="form-label">Tutup Pada</label>
-                        <input wire:model="tutupAt" type="datetime-local" class="form-input">
-                        @error('tutupAt') <div class="form-error">{{ $message }}</div> @enderror
-                    </div>
-                    <div>
-                        <label class="form-label">KKM / Passing Grade</label>
-                        <input wire:model="passingGrade" type="number" class="form-input" min="0" max="100" placeholder="60">
-                    </div>
-                    <div>
-                        <label class="form-label">Maks. Percobaan</label>
-                        <input wire:model="maxPercobaan" type="number" class="form-input" min="1" max="10">
-                    </div>
-                </div>
-
-                <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-                    <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.82rem; color:var(--text-primary);">
-                        <input type="checkbox" wire:model="acakSoal" style="accent-color:var(--teal);"> Acak urutan soal
-                    </label>
-                    <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.82rem; color:var(--text-primary);">
-                        <input type="checkbox" wire:model="tampilkanNilai" style="accent-color:var(--teal);"> Tampilkan nilai setelah selesai
-                    </label>
                 </div>
             </div>
 
-            {{-- Bank Soal --}}
-            <div class="card">
-                <div class="section-header" style="margin-bottom:1rem;">
-                    <div>
-                        <div class="section-title"><i class="fas fa-clipboard-list"></i> Bank Soal</div>
-                        <div class="section-sub">{{ count($soalList) }} soal ditambahkan</div>
+            {{-- Builder Soal --}}
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6 border-b border-[var(--border)] pb-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-list-ol text-[var(--teal)] text-lg"></i>
+                        <h2 class="text-lg font-bold text-[var(--text-primary)]">Bank Soal ({{ count($soalList) }})</h2>
                     </div>
-                    <button wire:click="addSoal" class="btn btn-primary btn-sm" {{ $showSoalForm ? 'disabled style=opacity:0.5' : '' }}>
-                        + Tambah Soal
-                    </button>
-                </div>
-                @error('soalList') <div class="form-error" style="margin-bottom:0.75rem;">{{ $message }}</div> @enderror
-
-                {{-- Soal Form (inline) --}}
-                @if($showSoalForm)
-                <div class="card" style="border-color:var(--border-teal); background:linear-gradient(135deg,var(--teal-dim),var(--bg-card)); margin-bottom:1.25rem;">
-                    <div style="font-size:0.82rem; font-weight:700; color:var(--teal); margin-bottom:1rem;">
-                        {{ $editSoalIdx >= 0 ? '✏️ Edit Soal ' . ($editSoalIdx+1) : '+ Soal Baru' }}
-                    </div>
-
-                    <div style="margin-bottom:0.875rem;">
-                        <label class="form-label">Pertanyaan *</label>
-                        <textarea wire:model="soalPertanyaan" class="form-input" rows="3" placeholder="Tulis pertanyaan..." style="resize:vertical;"></textarea>
-                        @error('soalPertanyaan') <div class="form-error">{{ $message }}</div> @enderror
-                    </div>
-
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.875rem;">
-                        <div>
-                            <label class="form-label">Tipe Soal</label>
-                            <select wire:model.live="soalTipe" class="form-input">
-                                <option value="pg">Pilihan Ganda</option>
-                                <option value="benar_salah">Benar / Salah</option>
-                                <option value="esai">Esai</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="form-label">Bobot Poin</label>
-                            <input wire:model="soalBobot" type="number" class="form-input" min="1" max="10">
-                        </div>
-                    </div>
-
-                    {{-- Pilihan --}}
-                    @if($soalTipe !== 'esai')
-                    <div style="margin-bottom:0.875rem;">
-                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
-                            <label class="form-label" style="margin-bottom:0;">Pilihan Jawaban (klik ● untuk tandai benar)</label>
-                            @if($soalTipe === 'pg')
-                            <button type="button" wire:click="addPilihan" class="btn btn-ghost btn-sm" style="font-size:0.7rem;">+ Pilihan</button>
-                            @endif
-                        </div>
-                        @php $huruf = ['A','B','C','D','E','F']; @endphp
-                        @foreach($soalPilihan as $pi => $pilihan)
-                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem;">
-                            <button type="button" wire:click="setPilihBenar({{ $pi }})"
-                                    style="width:28px; height:28px; border-radius:50%; border:2px solid {{ $pilihan['is_benar'] ? 'var(--success)' : 'var(--border)' }}; background:{{ $pilihan['is_benar'] ? 'rgba(34,197,94,0.15)' : 'var(--input-bg)' }}; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.15s;">
-                                @if($pilihan['is_benar'])
-                                <div style="width:12px; height:12px; border-radius:50%; background:var(--success);"></div>
-                                @endif
-                            </button>
-                            <span style="font-weight:700; color:var(--teal); font-size:0.8rem; flex-shrink:0;">{{ $huruf[$pi] ?? '' }}.</span>
-                            <input wire:model="soalPilihan.{{ $pi }}.teks" type="text" class="form-input"
-                                   placeholder="Pilihan {{ $huruf[$pi] ?? '' }}..."
-                                   style="flex:1;">
-                            @if($soalTipe === 'pg' && count($soalPilihan) > 2)
-                            <button type="button" wire:click="hapusPilihan({{ $pi }})"
-                                    style="color:var(--danger); background:none; border:none; cursor:pointer; font-size:1rem; flex-shrink:0;">×</button>
-                            @endif
-                        </div>
-                        @endforeach
-                        @if(!collect($soalPilihan)->contains('is_benar', true))
-                        <div style="font-size:0.72rem; color:var(--warning); margin-top:0.3rem;">⚠️ Pilih jawaban yang benar dengan klik tombol ●</div>
-                        @endif
-                    </div>
-                    @else
-                    <div style="padding:0.75rem; background:var(--input-bg); border-radius:8px; font-size:0.78rem; color:var(--text-muted); margin-bottom:0.875rem;">
-                        <i class="fas fa-lightbulb"></i> Soal esai perlu dinilai manual oleh dosen
-                    </div>
-                    @endif
-
-                    <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
-                        <button type="button" wire:click="batalSoal" class="btn btn-ghost btn-sm">Batal</button>
-                        <button type="button" wire:click="simpanSoal" class="btn btn-primary btn-sm">
-                            <span wire:loading.remove wire:target="simpanSoal"><i class="fas fa-check-circle"></i> Simpan Soal</span>
-                            <span wire:loading wire:target="simpanSoal">Menyimpan...</span>
+                    @if(!$showSoalForm)
+                        <button wire:click="addSoal" class="btn btn-sm btn-outline border-[var(--teal)] text-[var(--teal)] hover:bg-[var(--teal-dim)]">
+                            <i class="fas fa-plus mr-1"></i> Tambah Soal
                         </button>
-                    </div>
+                    @endif
                 </div>
-                @endif
 
-                {{-- Soal List --}}
-                @forelse($soalList as $idx => $soal)
-                <div style="display:flex; align-items:flex-start; gap:0.875rem; padding:0.875rem; background:var(--input-bg); border:1px solid var(--border); border-radius:10px; margin-bottom:0.5rem; transition:border-color 0.15s;"
-                     onmouseover="this.style.borderColor='var(--border-teal)'" onmouseout="this.style.borderColor='var(--border)'">
-                    <div style="width:28px; height:28px; background:var(--teal-dim); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--teal); flex-shrink:0;">{{ $idx+1 }}</div>
-                    <div style="flex:1; min-width:0;">
-                        <div style="font-size:0.875rem; font-weight:600; color:var(--text-primary); margin-bottom:0.25rem; line-height:1.4;">{{ Str::limit($soal['pertanyaan'], 80) }}</div>
-                        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                            <span class="badge badge-gray">{{ $soal['tipe'] === 'pg' ? 'Pilihan Ganda' : ($soal['tipe'] === 'esai' ? 'Esai' : 'Benar/Salah') }}</span>
-                            <span class="badge badge-teal">{{ $soal['bobot'] }} poin</span>
-                            @if($soal['tipe'] !== 'esai')
-                            <span style="font-size:0.68rem; color:var(--text-muted);">{{ count($soal['pilihan']) }} pilihan</span>
-                            @endif
+                @error('soalList') 
+                    <div class="p-3 mb-4 rounded bg-red-50 text-red-600 border border-red-200 text-sm font-medium">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> {{ $message }}
+                    </div> 
+                @enderror
+
+                {{-- Form Editor Soal --}}
+                @if($showSoalForm)
+                    <div class="border-2 border-dashed border-[var(--border)] p-5 rounded-xl bg-[var(--input-bg)] mb-6">
+                        <h3 class="font-bold text-[var(--text-primary)] mb-4">
+                            {{ $editSoalIdx >= 0 ? 'Edit Soal #'.($editSoalIdx+1) : 'Buat Soal Baru' }}
+                        </h3>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Tipe Soal</label>
+                                <select wire:model.live="soalTipe" class="form-input w-full text-sm">
+                                    <option value="pilihan_ganda">Pilihan Ganda</option>
+                                    <option value="essay">Essay / Isian</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Bobot Poin</label>
+                                <input wire:model="soalBobot" type="number" min="1" class="form-input w-full text-sm">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Pertanyaan *</label>
+                            <textarea wire:model="soalPertanyaan" class="form-input w-full text-sm" rows="3" placeholder="Tuliskan pertanyaan..."></textarea>
+                            @error('soalPertanyaan') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
+                        </div>
+
+                        @if($soalTipe === 'pilihan_ganda')
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="block text-xs font-semibold text-[var(--text-secondary)]">Pilihan Jawaban (Pilih yang benar)</label>
+                                    @if(count($soalPilihan) < 6)
+                                        <button wire:click="addPilihan" class="text-xs text-[var(--teal)] hover:underline"><i class="fas fa-plus"></i> Tambah Opsi</button>
+                                    @endif
+                                </div>
+                                
+                                @error('soalPilihan') <div class="text-red-500 text-xs mb-2">{{ $message }}</div> @enderror
+
+                                <div class="space-y-2">
+                                    @foreach($soalPilihan as $i => $pilihan)
+                                        <div class="flex items-center gap-2">
+                                            <input type="radio" name="benarIdx" wire:click="setPilihBenar({{ $i }})" {{ $pilihan['is_benar'] ? 'checked' : '' }} 
+                                                   class="w-4 h-4 text-[var(--teal)] accent-[var(--teal)]" title="Tandai sebagai jawaban benar">
+                                            <input wire:model="soalPilihan.{{ $i }}.teks" type="text" class="form-input flex-1 text-sm py-1.5" placeholder="Opsi {{ chr(65+$i) }}">
+                                            @if(count($soalPilihan) > 2)
+                                                <button wire:click="hapusPilihan({{ $i }})" class="text-red-400 hover:text-red-600 px-2" title="Hapus opsi"><i class="fas fa-times"></i></button>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="flex gap-2 justify-end mt-4">
+                            <button wire:click="batalSoal" class="btn btn-sm btn-ghost border border-[var(--border)]">Batal</button>
+                            <button wire:click="simpanSoal" class="btn btn-sm btn-primary">Simpan Soal ke Daftar</button>
                         </div>
                     </div>
-                    <div style="display:flex; gap:0.35rem; flex-shrink:0;">
-                        <button type="button" wire:click="editSoal({{ $idx }})" class="btn btn-ghost btn-sm" style="padding:0.25rem 0.5rem;">✏️</button>
-                        <button type="button" wire:click="hapusSoal({{ $idx }})" class="btn btn-danger btn-sm" style="padding:0.25rem 0.5rem;"
-                                onclick="return confirm('Hapus soal ini?')">🗑</button>
-                    </div>
-                </div>
-                @empty
-                @if(!$showSoalForm)
-                <div style="text-align:center; padding:2.5rem; color:var(--text-muted);">
-                    <div style="font-size:2rem; margin-bottom:0.5rem;"><i class="fas fa-clipboard-list" style="color:var(--text-muted);"></i></div>
-                    <div style="font-size:0.875rem;">Belum ada soal. Klik "Tambah Soal" untuk mulai.</div>
-                </div>
                 @endif
-                @endforelse
 
-                @if(count($soalList) > 0)
-                <div style="margin-top:0.75rem; padding:0.75rem; background:var(--teal-dim); border-radius:8px; font-size:0.78rem; color:var(--text-secondary); display:flex; justify-content:space-between;">
-                    <span>Total soal: <strong style="color:var(--text-primary);">{{ count($soalList) }}</strong></span>
-                    <span>Total poin: <strong style="color:var(--teal);">{{ collect($soalList)->sum('bobot') }}</strong></span>
+                {{-- Daftar Soal --}}
+                <div class="space-y-3">
+                    @forelse($soalList as $idx => $soal)
+                        <div class="border border-[var(--border)] rounded-lg p-4 flex gap-4 hover:border-[var(--teal)] transition">
+                            <div class="font-bold text-[var(--teal)] w-6 text-center">{{ $idx + 1 }}</div>
+                            <div class="flex-1">
+                                <p class="text-[var(--text-primary)] font-medium text-sm mb-2">{{ $soal['pertanyaan'] }}</p>
+                                <div class="flex gap-2 mb-2">
+                                    <span class="badge badge-gray text-[10px] uppercase">{{ str_replace('_', ' ', $soal['tipe']) }}</span>
+                                    <span class="badge badge-blue text-[10px]">{{ $soal['bobot'] }} Poin</span>
+                                </div>
+                                
+                                @if($soal['tipe'] === 'pilihan_ganda')
+                                    <div class="grid grid-cols-2 gap-2 mt-2">
+                                        @foreach($soal['pilihan'] as $j => $pilihan)
+                                            @if(!empty($pilihan['teks']))
+                                                <div class="text-xs p-1.5 rounded {{ $pilihan['is_benar'] ? 'bg-[var(--success)] text-white font-semibold' : 'bg-[var(--bg-body)] text-[var(--text-secondary)]' }}">
+                                                    {{ chr(65+$j) }}. {{ $pilihan['teks'] }}
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <button wire:click="editSoal({{ $idx }})" class="text-blue-500 hover:bg-blue-50 p-1.5 rounded transition"><i class="fas fa-edit"></i></button>
+                                <button wire:click="hapusSoal({{ $idx }})" class="text-red-500 hover:bg-red-50 p-1.5 rounded transition"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    @empty
+                        @if(!$showSoalForm)
+                            <div class="text-center py-8 text-[var(--text-muted)]">
+                                <p>Belum ada soal ditambahkan.</p>
+                                <p class="text-xs mt-1">Klik tombol "Tambah Soal" untuk mulai membuat bank soal.</p>
+                            </div>
+                        @endif
+                    @endforelse
                 </div>
-                @endif
             </div>
         </div>
 
-        {{-- RIGHT: Settings --}}
-        <div style="position:sticky; top:1rem;">
-            <div class="card" style="margin-bottom:1rem; background:var(--teal-dim); border-color:var(--border-teal);">
-                <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:0.875rem;"><i class="fas fa-chart-bar"></i> Ringkasan Kuis</div>
-                <div style="font-size:0.82rem; color:var(--text-primary); line-height:2;">
-                    <div>Soal: <strong>{{ count($soalList) }}</strong></div>
-                    <div>Durasi: <strong>{{ $durasiMenit }} menit</strong></div>
-                    <div>KKM: <strong>{{ $passingGrade ?? '-' }}</strong></div>
-                    <div>Percobaan: <strong>{{ $maxPercobaan }}x</strong></div>
+        {{-- Kolom Kanan: Pengaturan Jadwal --}}
+        <div class="lg:sticky lg:top-4 space-y-6">
+            <div class="card p-6">
+                <div class="flex items-center gap-2 mb-6 border-b border-[var(--border)] pb-3">
+                    <i class="fas fa-cog text-[var(--teal)] text-lg"></i>
+                    <h2 class="text-lg font-bold text-[var(--text-primary)]">Pengaturan Ujian</h2>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Waktu Buka Kuis *</label>
+                    <input wire:model="bukaAt" type="datetime-local" class="form-input w-full">
+                    @error('bukaAt') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Waktu Tutup Kuis *</label>
+                    <input wire:model="tutupAt" type="datetime-local" class="form-input w-full">
+                    @error('tutupAt') <div class="text-red-500 text-xs mt-1">{{ $message }}</div> @enderror
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Batas Percobaan (Retries)</label>
+                    <input wire:model="maksPercobaan" type="number" min="1" max="10" class="form-input w-full">
+                </div>
+
+                <div class="space-y-3 border-t border-[var(--border)] pt-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" wire:model="acakSoal" class="w-4 h-4 accent-[var(--teal)]">
+                        <span class="text-sm font-medium text-[var(--text-primary)]">Acak Urutan Soal</span>
+                    </label>
+
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" wire:model="tampilkanPembahasan" class="w-4 h-4 accent-[var(--teal)]">
+                        <span class="text-sm font-medium text-[var(--text-primary)]">Tampilkan Pembahasan setelah selesai</span>
+                    </label>
+                    
+                    <label class="flex items-start gap-3 cursor-pointer p-3 bg-[var(--input-bg)] border border-[var(--border)] rounded-lg hover:border-[var(--teal)] transition group mt-4">
+                        <input type="checkbox" wire:model="isPublished" class="w-5 h-5 mt-0.5 accent-[var(--teal)]">
+                        <div>
+                            <div class="text-sm font-bold text-[var(--text-primary)] group-hover:text-[var(--teal)] transition">Publish Sekarang</div>
+                            <div class="text-xs text-[var(--text-muted)] mt-0.5">Mahasiswa akan menerima notifikasi kuis</div>
+                        </div>
+                    </label>
                 </div>
             </div>
 
-            <div class="card" style="margin-bottom:1rem;">
-                <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer; padding:0.75rem; border-radius:8px; background:var(--input-bg); border:1px solid var(--border);">
-                    <input type="checkbox" wire:model="isPublished" style="accent-color:var(--teal); width:16px; height:16px;">
-                    <div>
-                        <div style="font-size:0.82rem; font-weight:600; color:var(--text-primary);">Publish Sekarang</div>
-                        <div style="font-size:0.7rem; color:var(--text-muted);">Aktif sesuai jadwal buka/tutup</div>
-                    </div>
-                </label>
-            </div>
-
-            <div style="display:flex; gap:0.5rem;">
-                <a href="{{ route('dosen.matakuliah.detail', $kelas) }}" class="btn btn-ghost btn-sm" style="flex:1; justify-content:center;">Batal</a>
-                <button wire:click="save" class="btn btn-primary" style="flex:2;">
-                    <span wire:loading.remove wire:target="save">💾 Buat Kuis</span>
-                    <span wire:loading wire:target="save">Menyimpan...</span>
+            <div class="flex gap-3">
+                <button wire:click="save" class="btn btn-primary w-full justify-center text-sm shadow-md shadow-teal-500/20">
+                    <span wire:loading.remove wire:target="save"><i class="fas fa-save mr-2"></i> Simpan Kuis</span>
+                    <span wire:loading wire:target="save"><i class="fas fa-circle-notch fa-spin mr-2"></i> Memproses...</span>
                 </button>
             </div>
         </div>

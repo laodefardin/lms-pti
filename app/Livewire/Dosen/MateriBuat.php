@@ -40,9 +40,13 @@ class MateriBuat extends Component
         $this->kelas   = $kelas;
         $this->urutan  = KontenMateri::whereHas('pertemuan', fn($q) => $q->where('kelas_id', $kelas->id))->max('urutan') + 1;
 
-        // Default ke pertemuan terakhir
-        $last = $kelas->pertemuan()->orderByDesc('nomor')->first();
-        if ($last) $this->pertemuanId = $last->id;
+        if (request()->has('pertemuan')) {
+            $this->pertemuanId = request('pertemuan');
+        } else {
+            // Default ke pertemuan terakhir
+            $last = $kelas->pertemuan()->orderByDesc('nomor')->first();
+            if ($last) $this->pertemuanId = $last->id;
+        }
     }
 
     public function updatedTipe(): void
@@ -52,24 +56,32 @@ class MateriBuat extends Component
         $this->filePdf = null;
     }
 
+    public function setTipe($newTipe): void
+    {
+        $this->tipe = $newTipe;
+        $this->updatedTipe();
+    }
+
     public function save(): void
     {
         $this->validate([
             'judul'         => 'required|string|max:200',
             'tipe'          => 'required|in:artikel,video,pdf,kode,link',
+            'pertemuanId'   => $this->buatPertemuanBaru ? 'nullable' : 'required|exists:pertemuan,id',
             'estimasiMenit' => 'nullable|integer|min:1|max:600',
             'konten'        => $this->tipe === 'artikel' || $this->tipe === 'kode' ? 'required' : 'nullable',
             'url'           => $this->tipe === 'video' || $this->tipe === 'link' ? 'required|url' : 'nullable',
             'filePdf'       => $this->tipe === 'pdf' ? 'required|file|mimes:pdf|max:20480' : 'nullable',
         ], [
-            'judul.required'   => 'Judul materi wajib diisi.',
-            'url.required'     => 'URL wajib diisi untuk tipe ini.',
-            'filePdf.required' => 'File PDF wajib diupload.',
+            'judul.required'       => 'Judul materi wajib diisi.',
+            'url.required'         => 'URL wajib diisi untuk tipe ini.',
+            'filePdf.required'     => 'File PDF wajib diupload.',
+            'pertemuanId.required' => 'Silakan pilih pertemuan/sesi.',
         ]);
 
         // Buat pertemuan baru jika diperlukan
         if ($this->buatPertemuanBaru) {
-            $this->validate(['topik' => 'required|string|max:200']);
+            $this->validate(['topik' => 'required|string|max:200'], ['topik.required' => 'Topik pertemuan baru wajib diisi.']);
             $nomor = $this->kelas->pertemuan()->max('nomor') + 1;
             $pertemuan = Pertemuan::create([
                 'kelas_id' => $this->kelas->id,
@@ -101,7 +113,7 @@ class MateriBuat extends Component
             'konten'         => $this->tipe === 'artikel' || $this->tipe === 'kode' ? $this->konten : null,
             'url'            => $this->tipe === 'video' || $this->tipe === 'link' ? $this->url : null,
             'file_path'      => $filePath,
-            'estimasi_menit' => $this->estimasiMenit,
+            'estimasi_menit' => $this->estimasiMenit ?: 0,
             'urutan'         => $this->urutan,
             'is_published'   => $this->isPublished,
             'ikon'           => $ikon,

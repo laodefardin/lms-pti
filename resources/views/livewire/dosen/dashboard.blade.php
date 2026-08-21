@@ -4,14 +4,14 @@
     <div style="margin-bottom:2rem; display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
         <div>
             <h1 style="font-size:1.5rem; font-weight:800; color:var(--text-primary); margin-bottom:0.25rem;">
-                Selamat datang, {{ explode(' ', $dosen->name)[0] }} 👋
+                Selamat datang, {{ $dosen->name }} 👋
             </h1>
             <p style="color:var(--text-secondary); font-size:0.875rem;">
                 Semangat mengajar hari ini!
             </p>
         </div>
-        <a href="{{ route('dosen.matakuliah.buat') }}" style="background:var(--teal); color:white; padding:0.6rem 1.25rem; border-radius:8px; font-weight:600; font-size:0.875rem; text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem; transition:background 0.2s;" onmouseover="this.style.background='var(--teal-dark)'" onmouseout="this.style.background='var(--teal)'">
-            <i class="fas fa-plus"></i> Buat Kelas Baru
+        <a href="{{ route('dosen.matakuliah.buat') }}" class="btn btn-primary">
+            <i class="fas fa-plus mr-2"></i> Buat Kelas Baru
         </a>
     </div>
 
@@ -58,14 +58,14 @@
             </div>
             <div style="flex:1;">
                 <div style="font-size:0.75rem; color:var(--text-secondary); font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.25rem;">Kuis Berjalan</div>
-                <div style="font-size:1.5rem; font-weight:800; color:var(--text-primary); line-height:1;">{{ $kuisAktif }}</div>
+                <div style="font-size:1.5rem; font-weight:800; color:var(--text-primary); line-height:1;">0</div>
             </div>
         </div>
 
     </div>
 
-    {{-- ── Main Grid Layout ─────────────────────────────────────── --}}
-    <div style="gap:1.5rem;" class="grid grid-cols-1 lg:grid-cols-12">
+    {{-- ── Main Grid ────────────────────────────────────────────── --}}
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {{-- LEFT COLUMN (8 cols) --}}
         <div class="lg:col-span-8" style="display:flex; flex-direction:column; gap:1.5rem;">
@@ -74,33 +74,79 @@
             <div>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
                     <h2 style="font-size:1.1rem; font-weight:700; color:var(--text-primary);">Kelas yang Diampu</h2>
-                    <a href="{{ route('dosen.matakuliah.index') }}" style="font-size:0.8rem; color:#3b82f6; font-weight:600; text-decoration:none;">Kelola kelas &rarr;</a>
+                    <a href="{{ route('dosen.matakuliah.index') }}" style="font-size:0.8rem; font-weight:600; color:var(--teal); text-decoration:none;">Lihat Semua</a>
                 </div>
                 
                 @if($kelasList->isEmpty())
-                    <div class="card" style="text-align:center; padding:3rem;">
-                        <div style="font-size:3rem; margin-bottom:1rem; color:var(--text-muted);"><i class="fas fa-folder-open"></i></div>
-                        <div style="color:var(--text-secondary); font-size:0.9rem;">Belum ada kelas aktif.</div>
+                    <div class="card" style="padding:2.5rem; text-align:center;">
+                        <div style="width:64px; height:64px; border-radius:50%; background:rgba(139,149,168,0.1); color:var(--text-muted); display:flex; align-items:center; justify-content:center; font-size:1.5rem; margin:0 auto 1rem;">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h3 style="font-weight:700; color:var(--text-primary); margin-bottom:0.25rem;">Tidak Ada Kelas</h3>
+                        <p style="font-size:0.875rem; color:var(--text-secondary); margin-bottom:1.5rem;">Anda belum memiliki kelas yang aktif.</p>
+                        <a href="{{ route('dosen.matakuliah.buat') }}" class="btn btn-primary" style="display:inline-flex;">Buat Kelas Sekarang</a>
                     </div>
                 @else
-                    <div style="gap:1rem;" class="grid grid-cols-1 md:grid-cols-3">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
                         @foreach($kelasList->take(3) as $kelas)
-                        <div class="card" style="padding:0; overflow:hidden; border:none; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
-                            {{-- Image header (dark blue gradient) --}}
-                            <div style="height:100px; background:linear-gradient(135deg, var(--teal), var(--teal-dark)); padding:1rem; position:relative; color:white;">
-                                <div style="position:absolute; top:1rem; right:1rem;"><i class="fas fa-ellipsis-v"></i></div>
-                                <span style="background:rgba(255,255,255,0.2); backdrop-filter:blur(4px); padding:0.2rem 0.6rem; border-radius:4px; font-size:0.7rem; font-weight:600; position:absolute; bottom:1rem; left:1rem;">{{ $kelas->mahasiswa->count() }} Mhs</span>
-                            </div>
-                            {{-- Content --}}
-                            <div style="padding:1.25rem; background:var(--bg-card);">
-                                <div style="font-size:1rem; font-weight:700; color:var(--text-primary); margin-bottom:0.25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ $kelas->mataKuliah->nama }}">{{ $kelas->mataKuliah->nama }}</div>
-                                <div style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:1rem;">Kelas {{ $kelas->nama_kelas }} &bull; {{ $kelas->mataKuliah->sks }} SKS</div>
+                            @php
+                                $gradients = [
+                                    ['from' => '#1a75d1', 'to' => '#0d559e', 'icon' => 'fa-laptop-code'],
+                                    ['from' => '#f59e0b', 'to' => '#d97706', 'icon' => 'fa-book-open'],
+                                    ['from' => '#8b5cf6', 'to' => '#6d28d9', 'icon' => 'fa-flask'],
+                                    ['from' => '#10b981', 'to' => '#059669', 'icon' => 'fa-chart-bar'],
+                                    ['from' => '#ef4444', 'to' => '#dc2626', 'icon' => 'fa-pen-nib'],
+                                    ['from' => '#06b6d4', 'to' => '#0891b2', 'icon' => 'fa-globe'],
+                                    ['from' => '#ec4899', 'to' => '#db2777', 'icon' => 'fa-brain'],
+                                    ['from' => '#f97316', 'to' => '#ea580c', 'icon' => 'fa-calculator'],
+                                ];
+                                $g = $gradients[$kelas->id % count($gradients)];
+                            @endphp
+                            <div class="card h-full flex flex-col hover:-translate-y-1 transition-transform" style="--shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.1);">
+                                <div class="h-32 rounded-t-lg relative overflow-hidden flex items-center justify-center"
+                                    style="background: linear-gradient(135deg, {{ $g['from'] }}, {{ $g['to'] }});">
+                
+                                    @if($kelas->thumbnail)
+                                        <img src="{{ asset('storage/' . $kelas->thumbnail) }}"
+                                             alt="{{ $kelas->mataKuliah->nama ?? '' }}"
+                                             class="absolute inset-0 w-full h-full object-cover">
+                                        <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%);"></div>
+                                        <span class="badge bg-white/20 backdrop-blur text-white absolute top-3 right-3 border border-white/30">{{ $kelas->mataKuliah->sks ?? 0 }} SKS</span>
+                                        <h3 class="text-white font-bold text-lg text-center absolute bottom-3 left-3 right-3 line-clamp-2 drop-shadow-lg">{{ $kelas->mataKuliah->nama ?? 'Unknown MK' }}</h3>
+                                    @else
+                                        <div class="absolute" style="width:120px; height:120px; border-radius:50%; background:rgba(255,255,255,0.08); top:-30px; right:-30px;"></div>
+                                        <div class="absolute" style="width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,0.08); bottom:-20px; left:-20px;"></div>
+                                        
+                                        <i class="fas {{ $g['icon'] }} absolute"
+                                           style="font-size: 5rem; color: rgba(255,255,255,0.15); bottom: -8px; right: 8px; transform: rotate(-10deg);"></i>
+                                           
+                                        <span class="badge bg-white/20 backdrop-blur text-white absolute top-3 right-3 border border-white/30">{{ $kelas->mataKuliah->sks ?? 0 }} SKS</span>
+                                        <div class="absolute bottom-3 left-4 right-4">
+                                            <h3 class="text-white font-bold text-base line-clamp-2 drop-shadow" style="text-shadow: 0 1px 3px rgba(0,0,0,0.3);">{{ $kelas->mataKuliah->nama ?? 'Unknown MK' }}</h3>
+                                            <p class="text-white/70 text-xs mt-0.5">{{ $kelas->semester->nama ?? '' }}</p>
+                                        </div>
+                                    @endif
+                                </div>
                                 
-                                <div style="display:flex; gap:0.5rem;">
-                                    <a href="{{ route('dosen.matakuliah.detail', $kelas) }}" style="flex:1; text-align:center; background:var(--teal); color:white; font-size:0.8rem; font-weight:600; padding:0.5rem; border-radius:8px; text-decoration:none;">Kelola</a>
+                                <div class="p-4 flex-1 flex flex-col">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <span class="text-xs font-semibold text-gray-500">{{ $kelas->mataKuliah->kode ?? '-' }}</span>
+                                        <span class="badge badge-teal text-xs">Kelas {{ $kelas->nama_kelas }}</span>
+                                    </div>
+                                    
+                                    <p class="text-xs text-gray-600 mb-2">
+                                        <i class="fas fa-calendar-alt w-4 text-center mr-1" style="color: var(--teal)"></i>
+                                        {{ $kelas->hari_kuliah ? ucfirst($kelas->hari_kuliah) : '-' }}, {{ $kelas->jam_mulai ?? '--:--' }} - {{ $kelas->jam_selesai ?? '--:--' }}
+                                    </p>
+                                    <p class="text-xs text-gray-600 mb-4">
+                                        <i class="fas fa-users w-4 text-center mr-1" style="color: var(--teal)"></i> {{ $kelas->mahasiswa_count }} Mahasiswa
+                                    </p>
+                
+                                    <div class="mt-auto">
+                                        <a href="{{ route('dosen.matakuliah.detail', ['kelas' => $kelas]) }}" class="btn btn-primary w-full justify-center btn-sm">Kelola Kelas</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         @endforeach
                     </div>
                 @endif

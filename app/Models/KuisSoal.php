@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class KuisSoal extends Model
 {
     protected $table    = 'kuis_soal';
+    public $timestamps  = false;
     // kuis_soal only has: id, kuis_id, bank_soal_id, urutan
     protected $fillable = ['kuis_id', 'bank_soal_id', 'urutan'];
 

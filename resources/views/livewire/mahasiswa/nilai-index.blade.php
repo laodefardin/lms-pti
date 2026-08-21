@@ -60,7 +60,11 @@
                         @endphp
                         <tr>
                             <td>
-                                <p style="font-weight:700; color:var(--text-primary); margin-bottom:2px;">{{ $n->kelas->mataKuliah->nama }}</p>
+                                <a href="{{ route('mahasiswa.nilai.detail', $n->kelas->id) }}" wire:navigate style="text-decoration:none;">
+                                    <p style="font-weight:700; color:var(--teal); margin-bottom:2px; transition: color 0.2s;" onmouseover="this.style.color='var(--teal-dark)'" onmouseout="this.style.color='var(--teal)'">
+                                        {{ $n->kelas->mataKuliah->nama }} <i class="fas fa-external-link-alt" style="font-size:0.7rem; margin-left:4px;"></i>
+                                    </p>
+                                </a>
                                 <p style="font-size:0.75rem; color:var(--text-secondary);">{{ $n->kelas->dosen->name }}</p>
                             </td>
                             <td style="text-align:center;">{{ number_format($n->nilai_kehadiran, 1) }}</td>

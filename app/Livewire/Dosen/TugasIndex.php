@@ -16,7 +16,17 @@ class TugasIndex extends Component
         if ($kelas->dosen_id !== auth()->id()) {
             abort(403);
         }
-        $this->kelas = $kelas->load('tugas.pengumpulan', 'mahasiswa');
+        $this->kelas = $kelas->load('tugas.pengumpulan', 'tugas.pertemuan', 'mahasiswa');
+    }
+
+    public function hapusTugas(int $tugasId): void
+    {
+        $tugas = Tugas::find($tugasId);
+        if ($tugas && $tugas->kelas_id === $this->kelas->id) {
+            $tugas->delete();
+            $this->kelas->load('tugas.pengumpulan', 'tugas.pertemuan', 'mahasiswa');
+            session()->flash('success', 'Tugas berhasil dihapus.');
+        }
     }
 
     #[Layout('components.layouts.dosen', ['title' => 'Manajemen Tugas'])]

@@ -163,7 +163,7 @@ class GamifikasiService
         // Notifikasi badge baru
         $this->notifService->kirim(
             userId : $userId,
-            tipe   : 'badge',
+            tipe   : 'sistem',
             judul  : "Badge Baru: {$def['nama']}",
             pesan  : "Selamat! Kamu mendapatkan badge {$def['icon']} {$def['nama']}!",
             icon   : $def['icon']

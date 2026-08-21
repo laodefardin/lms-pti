@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" x-init="$store.theme.init()">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
     <script>
         (function() {
             var saved = localStorage.getItem('lms-theme');
-            var isDark = saved !== null ? saved === 'dark' : true;
+            var isDark = saved === 'dark'; // default: light
             document.documentElement.classList.add(isDark ? 'dark' : 'light');
         })();
     </script>
@@ -57,11 +57,11 @@
             <img src="{{ auth()->user()->foto_url }}" alt="Avatar" class="sidebar-avatar">
             <div style="flex:1; min-width:0;">
                 <div class="sidebar-user-name" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ auth()->user()->name }}</div>
-                <div class="sidebar-user-role" style="color:var(--teal);">Dosen</div>
+                <div class="sidebar-user-role">Dosen</div>
             </div>
             {{-- Dropdown --}}
             <div x-show="open" x-transition @click.outside="open=false"
-                 style="display:none; position:absolute; bottom:100%; left:5px; width:250px; margin-bottom:0.5rem; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; z-index:100; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
+                 style="display:none; position:absolute; bottom:100%; left:5px; width:230px; margin-bottom:0.5rem; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; z-index:100; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
                 
                 <div style="padding: 1rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--border);">
                     <div style="position: relative;">
@@ -137,7 +137,27 @@
                 <livewire:notification-center />
             </div>
         </header>
-        <main class="page-content">{{ $slot }}</main>
+        <main class="page-content">
+            @if(session('success'))
+                <div class="mb-4 p-4 rounded-lg bg-green-500/10 border border-green-500/30 text-green-700 dark:text-green-400 flex items-center justify-between" x-data="{ show: true }" x-show="show" x-transition>
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{{ session('success') }}</span>
+                    </div>
+                    <button @click="show = false" class="text-green-700/50 hover:text-green-700 dark:text-green-400/50 dark:hover:text-green-400"><i class="fas fa-times"></i></button>
+                </div>
+            @endif
+            @if(session('error'))
+                <div class="mb-4 p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-700 dark:text-red-400 flex items-center justify-between" x-data="{ show: true }" x-show="show" x-transition>
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>{{ session('error') }}</span>
+                    </div>
+                    <button @click="show = false" class="text-red-700/50 hover:text-red-700 dark:text-red-400/50 dark:hover:text-red-400"><i class="fas fa-times"></i></button>
+                </div>
+            @endif
+            {{ $slot }}
+        </main>
     </div>
 </div>
 @livewireScripts

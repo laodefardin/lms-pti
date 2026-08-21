@@ -11,7 +11,7 @@ class BankSoal extends Model
         'kelas_id', 'dosen_id', 'tipe', 'pertanyaan',
         'opsi', 'jawaban', 'pembahasan', 'bobot', 'topik',
     ];
-    protected $casts = ['opsi' => 'array'];
+    protected $casts = ['opsi' => 'array', 'jawaban' => 'array'];
 
     public function kelas() { return $this->belongsTo(Kelas::class); }
     public function dosen() { return $this->belongsTo(User::class, 'dosen_id'); }
@@ -31,9 +31,14 @@ class BankSoal extends Model
         ])->values();
     }
 
-    /** Check apakah jawaban mahasiswa benar */
     public function isJawabanBenar(string $jawaban): bool
     {
-        return strtolower(trim($jawaban)) === strtolower(trim($this->jawaban ?? ''));
+        $benar = $this->jawaban ?? [];
+        foreach ($benar as $j) {
+            if (strtolower(trim($jawaban)) === strtolower(trim($j))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

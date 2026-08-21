@@ -17,19 +17,21 @@ class TugasBuat extends Component
 
     public string  $judul       = '';
     public string  $deskripsi   = '';
-    public string  $tipe        = 'upload';  // upload|link|keduanya
+    public string  $tipe        = 'file';  // file|link|file_link
     public ?string $deadline    = null;
     public int     $bobotNilai  = 100;
     public int     $maxFileSize = 10;        // MB
     public array   $allowedExt  = ['pdf', 'docx', 'zip'];
     public bool    $isPublished = false;
     public $fileSoal            = null;
+    public ?int    $pertemuanId = null;
 
     public function mount(Kelas $kelas)
     {
         abort_unless($kelas->dosen_id === Auth::id(), 403);
         $this->kelas = $kelas;
         $this->deadline = now()->addDays(7)->format('Y-m-d\TH:i');
+        $this->pertemuanId = request('pertemuan_id') ? (int) request('pertemuan_id') : null;
     }
 
     public function toggleExt(string $ext): void
@@ -57,16 +59,17 @@ class TugasBuat extends Component
         }
 
         Tugas::create([
-            'kelas_id'            => $this->kelas->id,
-            'judul'               => $this->judul,
-            'deskripsi'           => $this->deskripsi,
-            'tipe'                => $this->tipe,
-            'deadline'            => $this->deadline,
-            'bobot_nilai'         => $this->bobotNilai,
-            'max_file_size'       => $this->maxFileSize * 1024,
-            'allowed_extensions'  => $this->allowedExt,
-            'file_soal'           => $soalPath,
-            'is_published'        => $this->isPublished,
+            'kelas_id'         => $this->kelas->id,
+            'pertemuan_id'     => $this->pertemuanId,
+            'judul'            => $this->judul,
+            'deskripsi'        => $this->deskripsi,
+            'tipe_pengumpulan' => $this->tipe,
+            'deadline'         => $this->deadline,
+            'nilai_max'        => $this->bobotNilai,
+            'maks_ukuran_mb'   => $this->maxFileSize,
+            'format_file'      => $this->allowedExt,
+            'file_soal'        => $soalPath,
+            'is_published'     => $this->isPublished,
         ]);
 
         $this->redirect(route('dosen.tugas.index', $this->kelas));

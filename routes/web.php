@@ -103,10 +103,12 @@ Route::middleware(['auth', 'role:dosen'])
         Route::get('/matakuliah/{kelas}/materi', \App\Livewire\Dosen\MateriIndex::class)->name('materi.index');
         Route::get('/matakuliah/{kelas}/materi/buat', \App\Livewire\Dosen\MateriBuat::class)->name('materi.buat');
         Route::get('/matakuliah/{kelas}/materi/{pertemuan}/edit', \App\Livewire\Dosen\MateriEdit::class)->name('materi.edit');
+        Route::get('/matakuliah/{kelas}/konten/{konten}/edit', \App\Livewire\Dosen\KontenEdit::class)->name('konten.edit');
 
         // Tugas
         Route::get('/matakuliah/{kelas}/tugas', \App\Livewire\Dosen\TugasIndex::class)->name('tugas.index');
         Route::get('/matakuliah/{kelas}/tugas/buat', \App\Livewire\Dosen\TugasBuat::class)->name('tugas.buat');
+        Route::get('/matakuliah/{kelas}/tugas/{tugas}/edit', \App\Livewire\Dosen\TugasEdit::class)->name('tugas.edit');
         Route::get('/matakuliah/{kelas}/tugas/{tugas}', \App\Livewire\Dosen\TugasDetail::class)->name('tugas.detail');
         Route::get('/matakuliah/{kelas}/tugas/{tugas}/nilai', \App\Livewire\Dosen\TugasNilai::class)->name('tugas.nilai');
 
@@ -170,4 +172,7 @@ Route::middleware(['auth', 'role:admin'])
 
         // Audit Log
         Route::get('/audit-log', \App\Livewire\Admin\AuditLog::class)->name('audit-log');
+
+        // Profil
+        Route::get('/profil', \App\Livewire\Admin\Profil::class)->name('profil');
     });

@@ -20,13 +20,13 @@ class TugasIndex extends Component
 
         $query = Tugas::whereIn('kelas_id', $kelasIds)
             ->where('is_published', true)
-            ->with(['kelas.mataKuliah', 'pengumpulanTugas' => function($q) use ($user) {
+            ->with(['kelas.mataKuliah', 'pengumpulan' => function($q) use ($user) {
                 $q->where('mahasiswa_id', $user->id);
             }])
             ->orderBy('deadline', 'asc');
 
         $tugas = $query->get()->filter(function($t) {
-            $pengumpulan = $t->pengumpulanTugas->first();
+            $pengumpulan = $t->pengumpulan->first();
             if ($this->filter === 'pending') {
                 return !$pengumpulan;
             } elseif ($this->filter === 'dikumpulkan') {

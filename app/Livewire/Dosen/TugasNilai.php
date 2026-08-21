@@ -45,6 +45,25 @@ class TugasNilai extends Component
         $this->feedback = '';
     }
 
+    public function createAndGrade($mahasiswaId)
+    {
+        // Pastikan mahasiswa ini benar-benar ada di kelas ini
+        if (!$this->kelas->mahasiswa->contains('id', $mahasiswaId)) {
+            return;
+        }
+
+        // Buat record kosong agar bisa dinilai
+        $pengumpulan = PengumpulanTugas::firstOrCreate([
+            'tugas_id' => $this->tugas->id,
+            'mahasiswa_id' => $mahasiswaId,
+        ], [
+            'status' => 'dikirim',
+            'nilai' => 0,
+        ]);
+
+        $this->openEdit($pengumpulan->id);
+    }
+
     public function saveNilai()
     {
         $this->validate([

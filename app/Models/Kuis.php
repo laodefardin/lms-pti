@@ -8,7 +8,7 @@ class Kuis extends Model
 {
     protected $table    = 'kuis';
     protected $fillable = [
-        'kelas_id', 'judul', 'deskripsi', 'instruksi', 'tipe',
+        'kelas_id', 'pertemuan_id', 'judul', 'deskripsi', 'instruksi', 'tipe',
         'durasi_menit', 'buka_at', 'tutup_at', 'nilai_max',
         'maks_percobaan', 'acak_soal', 'acak_pilihan',
         'tampilkan_pembahasan', 'is_published',
@@ -22,7 +22,8 @@ class Kuis extends Model
         'is_published'         => 'boolean',
     ];
 
-    public function kelas()  { return $this->belongsTo(Kelas::class); }
+    public function kelas()     { return $this->belongsTo(Kelas::class); }
+    public function pertemuan() { return $this->belongsTo(Pertemuan::class); }
     public function soal()   { return $this->hasMany(KuisSoal::class, 'kuis_id')->orderBy('urutan'); }
     public function sesi()   { return $this->hasMany(KuisSesi::class, 'kuis_id'); }
 

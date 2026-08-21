@@ -39,7 +39,7 @@ class MateriViewer extends Component
         $existing = CatatanMahasiswa::where('mahasiswa_id', Auth::id())
             ->where('konten_id', $konten->id)
             ->first();
-        $this->catatan = $existing?->catatan ?? '';
+        $this->catatan = $existing?->isi ?? '';
     }
 
     public function markSelesai(): void
@@ -74,7 +74,7 @@ class MateriViewer extends Component
 
         CatatanMahasiswa::updateOrCreate(
             ['mahasiswa_id' => Auth::id(), 'konten_id' => $this->konten->id],
-            ['catatan' => $this->catatan]
+            ['isi' => $this->catatan]
         );
         $this->saved = true;
         $this->dispatch('catatan-tersimpan');
@@ -121,13 +121,16 @@ class MateriViewer extends Component
             ->pluck('konten_id')
             ->toArray();
 
-        return view('livewire.mahasiswa.materi-viewer', [
+        $data = [
             'kelas'      => $kelas,
             'konten'     => $this->konten,
             'selesaiIds' => $selesaiIds,
             'isSelesai'  => $this->isSelesai(),
             'berikutnya' => $this->kontenBerikutnya(),
             'sebelumnya' => $this->kontenSebelumnya(),
-        ])->layout('components.layouts.viewer', ['kelas' => $kelas, 'konten' => $this->konten]);
+            'saved'      => $this->saved,
+        ];
+
+        return view('livewire.mahasiswa.materi-viewer', $data)->layout('components.layouts.viewer', $data);
     }
 }

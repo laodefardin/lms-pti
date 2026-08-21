@@ -11,10 +11,32 @@ class KontenMateri extends Model
 
     protected $table    = 'konten_materi';
     protected $fillable = [
-        'pertemuan_id', 'tipe', 'judul', 'konten', 'file_path',
+        'pertemuan_id', 'tipe', 'judul', 'slug', 'konten', 'file_path',
         'url', 'urutan', 'is_published', 'estimasi_menit',
     ];
     protected $casts = ['is_published' => 'boolean'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($konten) {
+            if (empty($konten->slug)) {
+                $baseSlug = \Illuminate\Support\Str::slug($konten->judul);
+                $slug = $baseSlug;
+                $count = 1;
+                while (static::where('slug', $slug)->exists()) {
+                    $slug = $baseSlug . '-' . $count++;
+                }
+                $konten->slug = $slug;
+            }
+        });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function pertemuan() { return $this->belongsTo(Pertemuan::class); }
     public function progress()  { return $this->hasMany(MateriProgress::class, 'konten_id'); }

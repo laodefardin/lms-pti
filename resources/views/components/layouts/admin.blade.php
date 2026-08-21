@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" x-init="$store.theme.init()">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
     <script>
         (function() {
             var saved = localStorage.getItem('lms-theme');
-            var isDark = saved !== null ? saved === 'dark' : true;
+            var isDark = saved === 'dark'; // default: light
             document.documentElement.classList.add(isDark ? 'dark' : 'light');
         })();
     </script>
@@ -69,7 +69,7 @@
             </div>
             {{-- Dropdown --}}
             <div x-show="open" x-transition @click.outside="open=false"
-                 style="display:none; position:absolute; bottom:100%; left:5px; width:250px; margin-bottom:0.5rem; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; z-index:100; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
+                 style="display:none; position:absolute; bottom:100%; left:5px; width:230px; margin-bottom:0.5rem; background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; z-index:100; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
                 
                 <div style="padding: 1rem; display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid var(--border);">
                     <div style="position: relative;">

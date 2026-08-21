@@ -24,7 +24,7 @@
     <script>
         (function() {
             var saved = localStorage.getItem('lms-theme');
-            var isDark = saved !== null ? saved === 'dark' : true;
+            var isDark = saved === 'dark'; // default: light
             document.documentElement.classList.add(isDark ? 'dark' : 'light');
         })();
     </script>
@@ -39,7 +39,14 @@
             <div class="flex items-center justify-between py-2 md:py-3">
                 {{-- Logo --}}
                 <a href="/" class="flex items-center gap-3 text-decoration-none hover:opacity-90 transition">
-                    <img src="{{ asset('images/logo-landing.png') }}" alt="Logo LMS PTI" class="h-16 md:h-24 lg:h-32 w-auto object-contain">
+                    <img
+                        x-data
+                        :src="document.documentElement.classList.contains('dark') ? '{{ asset('images/logo-dark.png') }}' : '{{ asset('images/logo-landing.png') }}'"
+                        x-effect="$el.src = document.documentElement.classList.contains('dark') ? '{{ asset('images/logo-dark.png') }}' : '{{ asset('images/logo-landing.png') }}'"
+                        @theme-changed.window="$el.src = document.documentElement.classList.contains('dark') ? '{{ asset('images/logo-dark.png') }}' : '{{ asset('images/logo-landing.png') }}'"
+                        alt="Logo LMS PTI"
+                        class="h-16 md:h-24 lg:h-32 w-auto object-contain"
+                    >
                 </a>
 
                 {{-- Desktop Nav Links --}}

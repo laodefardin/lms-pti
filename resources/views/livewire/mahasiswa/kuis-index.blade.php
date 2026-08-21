@@ -56,8 +56,9 @@
             {{-- Deadline + Nilai --}}
             <div style="text-align:right; flex-shrink:0; min-width:160px;">
                 @if($status === 'selesai' && $sesi)
-                    <div style="font-size:1.5rem; font-weight:800; color:{{ $sesi->nilai_akhir >= ($kuis->passing_grade ?? 60) ? 'var(--success)' : 'var(--danger)' }}; margin-bottom:0.2rem;">{{ $sesi->nilai_akhir ?? '-' }}</div>
-                    <div style="font-size:0.72rem; color:var(--text-muted);">{{ $sesi->selesai_at?->locale('id')->diffForHumans() }}</div>
+                    <div style="font-size:1.5rem; font-weight:800; color:{{ $sesi->nilai >= ($kuis->passing_grade ?? 60) ? 'var(--teal)' : 'var(--danger)' }}; margin-bottom:0.2rem;">{{ number_format($sesi->nilai, 0) ?? '-' }}</div>
+                    <div style="font-size:0.72rem; color:var(--text-muted); margin-bottom:0.5rem;">{{ $sesi->selesai_at?->locale('id')->diffForHumans() }}</div>
+                    <a href="{{ route('mahasiswa.kuis.hasil', $sesi->id) }}" wire:navigate class="btn-sm btn-ghost inline-flex items-center text-[var(--teal)] hover:bg-[var(--teal-dim)]">Lihat Hasil <i class="fas fa-arrow-right ml-1"></i></a>
                 @elseif(in_array($status, ['bisa_mulai','sedang_berjalan']))
                     <div style="font-size:0.75rem; color:var(--warning); font-weight:600; margin-bottom:0.3rem;">
                         ⏰ Tutup: {{ $kuis->tutup_at->locale('id')->isoFormat('D MMM, HH:mm') }}

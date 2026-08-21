@@ -8,8 +8,10 @@ class PengumpulanTugas extends Model
 {
     protected $table    = 'pengumpulan_tugas';
     protected $fillable = [
-        'tugas_id', 'mahasiswa_id', 'file_path', 'link_url',
-        'teks_jawaban', 'dikumpulkan_at', 'is_terlambat',
+        'tugas_id', 'mahasiswa_id',
+        'file_path', 'link_url', 'gdrive_file_id', 'gdrive_file_name',
+        'teks_jawaban', 'keterangan',
+        'dikumpulkan_at', 'is_terlambat',
         'nilai', 'feedback', 'dinilai_at', 'status',
     ];
     protected $casts = [

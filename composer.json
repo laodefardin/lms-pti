@@ -10,6 +10,7 @@
         "barryvdh/laravel-dompdf": "^3.1",
         "laravel/breeze": "^2.4",
         "laravel/framework": "^11.31",
+        "laravel/socialite": "^5.30",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^4.4",
         "maatwebsite/excel": "^3.1",

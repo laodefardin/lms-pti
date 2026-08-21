@@ -9,39 +9,27 @@ use App\Models\NilaiAkhir;
 use App\Services\ExportService;
 use Illuminate\Support\Facades\Auth;
 
-#[Layout('components.layouts.dosen', ['title' => 'Rekapitulasi Nilai'])]
 class NilaiIndex extends Component
 {
-    public $kelasId;
-    public $kelasList;
+    public Kelas $kelas;
 
-    public function mount()
+    public function mount(Kelas $kelas)
     {
-        $this->kelasList = Kelas::with('mataKuliah')
-            ->where('dosen_id', Auth::id())
-            ->where('status', 'aktif')
-            ->get();
-            
-        if ($this->kelasList->isNotEmpty()) {
-            $this->kelasId = $this->kelasList->first()->id;
-        }
+        abort_unless($kelas->dosen_id === Auth::id(), 403);
+        $this->kelas = $kelas;
     }
 
     public function exportExcel(ExportService $exportService)
     {
-        if ($this->kelasId) {
-            return $exportService->exportNilaiKelasExcel($this->kelasId);
-        }
+        return $exportService->exportNilaiKelasExcel($this->kelas->id);
     }
 
+    #[Layout('components.layouts.dosen', ['title' => 'Rekapitulasi Nilai'])]
     public function render()
     {
-        $nilaiList = collect();
-        if ($this->kelasId) {
-            $nilaiList = NilaiAkhir::with('mahasiswa')
-                ->where('kelas_id', $this->kelasId)
-                ->get();
-        }
+        $nilaiList = NilaiAkhir::with('mahasiswa')
+            ->where('kelas_id', $this->kelas->id)
+            ->get();
 
         return view('livewire.dosen.nilai-index', [
             'nilaiList' => $nilaiList

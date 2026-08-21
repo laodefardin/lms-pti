@@ -21,7 +21,11 @@ class AbsensiIndex extends Component
         }
         $this->kelas = $kelas->load(['pertemuan', 'mahasiswa']);
         
-        if ($kelas->pertemuan->count() > 0) {
+        $reqPertemuanId = request()->query('pertemuan');
+        
+        if ($reqPertemuanId && $this->kelas->pertemuan->contains('id', $reqPertemuanId)) {
+            $this->selectPertemuan($reqPertemuanId);
+        } elseif ($kelas->pertemuan->count() > 0) {
             $this->selectPertemuan($kelas->pertemuan->first()->id);
         }
     }
@@ -72,7 +76,11 @@ class AbsensiIndex extends Component
 
         $absensi = \App\Models\Absensi::firstOrCreate(
             ['pertemuan_id' => $this->selectedPertemuanId],
-            ['kelas_id' => $this->kelas->id, 'tanggal' => now()->toDateString()]
+            [
+                'kelas_id' => $this->kelas->id,
+                'token' => \Illuminate\Support\Str::upper(\Illuminate\Support\Str::random(6)),
+                'is_aktif' => true
+            ]
         );
 
         $gamifikasi = app(\App\Services\GamifikasiService::class);
@@ -90,7 +98,7 @@ class AbsensiIndex extends Component
                         userId: $mhsId,
                         tipeAktivitas: \App\Models\GamifikasiPoin::ABSENSI_HADIR,
                         kelasId: $this->kelas->id,
-                        keterangan: "Hadir pada pertemuan: {$this->kelas->pertemuan->firstWhere('id', $this->selectedPertemuanId)?->judul}",
+                        keterangan: "Hadir pada pertemuan: {$this->kelas->pertemuan->firstWhere('id', $this->selectedPertemuanId)?->topik}",
                         referenceId: $absensi->id,
                         allowDuplicate: false
                     );

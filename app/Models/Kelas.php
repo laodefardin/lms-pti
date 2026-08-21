@@ -11,7 +11,7 @@ class Kelas extends Model
     use HasFactory;
 
     protected $fillable = [
-        'mata_kuliah_id', 'dosen_id', 'semester_id', 'nama_kelas',
+        'mata_kuliah_id', 'dosen_id', 'semester_id', 'nama_kelas', 'slug',
         'thumbnail', 'deskripsi', 'hari_kuliah', 'jam_mulai', 'jam_selesai',
         'ruangan', 'bobot_tugas', 'bobot_kuis', 'bobot_kehadiran',
         'bobot_uts', 'bobot_uas', 'batas_kehadiran', 'mode_materi', 'status',
@@ -22,16 +22,31 @@ class Kelas extends Model
         'jam_selesai'=> 'string',
     ];
 
+    // ─── Boot Event ──────────────────────────────────────────────────────
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($kelas) {
+            if (empty($kelas->slug)) {
+                $mataKuliah = MataKuliah::find($kelas->mata_kuliah_id);
+                $baseSlug = Str::slug(($mataKuliah->nama ?? 'kelas') . '-' . ($kelas->nama_kelas ?? 'a'));
+                
+                // Ensure uniqueness
+                $slug = $baseSlug;
+                $count = 1;
+                while (static::where('slug', $slug)->exists()) {
+                    $slug = $baseSlug . '-' . $count++;
+                }
+                $kelas->slug = $slug;
+            }
+        });
+    }
+
     // ─── Route Binding via slug ──────────────────────────────────────────
     public function getRouteKeyName(): string
     {
-        return 'id'; // tetap ID, tapi kita custom resolve di route
-    }
-
-    /** Slug dari nama matakuliah + nama kelas */
-    public function getSlugAttribute(): string
-    {
-        return Str::slug(($this->mataKuliah->nama ?? '') . '-' . ($this->nama_kelas ?? ''));
+        return 'slug';
     }
 
     // ─── Relations ──────────────────────────────────────────────────────

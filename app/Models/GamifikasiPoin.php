@@ -12,13 +12,13 @@ class GamifikasiPoin extends Model
     public function user()  { return $this->belongsTo(User::class); }
     public function kelas() { return $this->belongsTo(Kelas::class); }
 
-    // Tipe aktivitas constants
-    const MATERI_SELESAI    = 'materi_selesai';
-    const TUGAS_DIKUMPULKAN = 'tugas_dikumpulkan';
-    const KUIS_SELESAI      = 'kuis_selesai';
-    const KUIS_LULUS        = 'kuis_lulus';
-    const FORUM_POST        = 'forum_post';
-    const FORUM_SOLUSI      = 'forum_solusi';
-    const ABSENSI_HADIR     = 'absensi_hadir';
-    const LOGIN_HARIAN      = 'login_harian';
+    // Tipe aktivitas constants — harus sesuai enum di DB
+    const MATERI_SELESAI    = 'baca_materi';
+    const TUGAS_DIKUMPULKAN = 'kumpulkan_tugas';
+    const KUIS_SELESAI      = 'kerjakan_kuis';
+    const KUIS_LULUS        = 'nilai_sempurna';
+    const FORUM_POST        = 'aktif_diskusi';
+    const FORUM_SOLUSI      = 'aktif_diskusi';
+    const ABSENSI_HADIR     = 'hadir_kuliah';
+    const LOGIN_HARIAN      = 'streak_belajar';
 }
